@@ -1,4 +1,11 @@
 /*----------------------------------------
+declare variables for gui
+----------------------------------------*/
+const rollBtn = document.querySelector('#rollDice')
+const playerOneBidBtn = document.querySelector('#p1PlaceBid')
+const nextTurn = document.querySelector('#nextTurn')
+
+/*----------------------------------------
 create player class
 ----------------------------------------*/
 class Player {
@@ -19,31 +26,39 @@ class Player {
             }
     }
     liar() {
-        game.players.forEach((x, i) => {
-            if (i != 0) {
-                let rng = Math.ceil(Math.random()*100)
-                let playerCallingLiar = x.name
-                if (this.bidStatus()) {
-                    if (rng <= 5) {
-                        console.log(`${playerCallingLiar} has called you a liar! Show your dice!`)
-                    } else {
-                        console.log(`${playerCallingLiar} did not call you a liar.`)
-                    }
-                } else {
-                    if (rng <= 30) {
-                        console.log(`${playerCallingLiar} has called you a liar! Show your dice!`)
-                    } else {
-                        console.log(`${playerCallingLiar} did not call you a liar.`)
-                    }
-                }
-            }
-        })
+        let rng = Math.ceil(Math.random()*100)
+        let playerCallingLiar = game.players[game.lastBid[2]] //do not change [2]; index would be +1 of their ID bc it's their turn
+        let diceCount = game.countDice()
+        let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
+        console.log(`Liar RNG roll: ${rng}`)
+        if (
+            this.bidStatus() && rng <= 5 
+            || bidDifference == 1 && rng >= 85 
+            || bidDifference == 2 && rng >= 75 
+            || bidDifference == 3 && rng >= 65 
+            || bidDifference > 3 && rng >= 50
+            || bidDifference > 5 && rng >= 10
+            ) {
+                console.log(`${playerCallingLiar.name} has called you a liar! Show your dice!`)
+                game.lastLiarCaller = playerCallingLiar
+                // liarEvent()
+        }
     }
 }
+
+function liarEvent() {
+// code here
+}
+
+// check if the face exists on the board
+// if no, set a liar %; if amt goes over a certain % of game.numDice, higher % liar
+// if yes, check how wrong the amt is
+
 /*----------------------------------------
 player bid
 ----------------------------------------*/
-Player.prototype.bid = function() {
+Player.prototype.bid = function() {  
+    
     const bid = [Number(document.querySelector(`#p${this.playerID}BidFace`).value), Number(document.querySelector(`#p${this.playerID}BidAmount`).value), Number(this.playerID)]
 
     //input validation
@@ -66,15 +81,18 @@ Player.prototype.bid = function() {
 
         console.log(`${this.name} has bid: ${bid[1]} of face ${bid[0]}`) // verify functionality
         console.log(game.lastBid) // verify functionality; check if the game object is updating
-        
+
         this.liar()
+
+        //disable bid button for playerOne after their turn
+        playerOneBidBtn.disabled = true
     }
 }
 
 /*----------------------------------------
 bot bid
 ----------------------------------------*/
-Player.prototype.botBid = function() {
+Player.prototype.botBid = function() { 
 
     if (Number(game.lastBid[0]) == 6 && Number(game.lastBid[1]) == game.numDice) {
         console.log('No more bids can be placed. Call the last bidder a liar, or re-roll all dice.')
@@ -178,6 +196,7 @@ const game = {
     lastBid: [],
     currentDice: [],
     diceCounts: {},
+    lastLiarCaller: '',
     listNumPlayers() {
         console.log(this.players.length)
     },
@@ -201,8 +220,12 @@ const game = {
                 console.log(`It is now ${game.players[currentPlayerID-1].name}'s turn to bid (Index in game.players: ${currentPlayerID-1}).`)
                 game.players[currentPlayerID-1].botBid()
             }
+            //re-enable bid button for player one if it's their turn
+            if (currentPlayerID == 1 || currentPlayerID == game.players[game.players.length-1].playerID) {
+                playerOneBidBtn.disabled = false
+            }
         }
-    }
+    },
 }
 game.numDice = game.players.length*5
 
@@ -247,14 +270,10 @@ function setPlayerTwoName() {
 /*----------------------------------------
 add event listeners to roll and bid buttons
 ----------------------------------------*/
-const rollBtn = document.querySelector('#rollDice')
 rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
-
-const playerOneBidBtn = document.querySelector('#p1PlaceBid')
 playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
-
-const nextTurn = document.querySelector('#nextTurn')
 nextTurn.addEventListener('click', game.nextTurn)
+
 
 
 /* to do:
