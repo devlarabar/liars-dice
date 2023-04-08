@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Liar's Dice</title>
+        <!-- external stylesheets & fonts -->
+        <link rel="stylesheet" href="css/reset.css"> <!-- normalize stylesheet -->
+        <link rel="stylesheet" href="css/style.css"> <!-- main stylesheet-->
+    </head>
+    <body>
+        <main>
+            <label for="playerOneName">Player 1 Name</label>
+            <input type="text" id="playerOneName" placeholder="Enter your name">
+            <button id="submitPlayerOneName">Set Name</button>
+
+            <label for="playerTwoName">Player 2 Name</label>
+            <input type="text" id="playerTwoName" placeholder="Enter your name">
+            <button id="submitPlayerTwoName">Set Name</button>
+
+            <button id="rollDice">Roll</button>
+
+            <section class="makeBids">
+                <label for="p1BidAmount">How many</label><input type="number" id="p1BidAmount">
+                <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" max="6">
+                <button id="p1PlaceBid">Place Bid</button>
+            </section>
+            <button id="nextTurn">Next Turn</button>
+        </main>
+
+        <script type="text/javascript" src="js/main.js"></script>
+    </body>
+</html>

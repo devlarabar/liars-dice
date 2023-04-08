@@ -1,0 +1,19 @@
+/* ********************
+html / body styles
+******************** */
+main {
+    width: 90%;
+    margin: 50px auto;
+}
+button {
+    margin: 5px;
+}
+label {
+    margin-right: 5px;
+}
+label:after {
+    content: ':';
+}
+/* ********************
+media queries 
+******************** */
