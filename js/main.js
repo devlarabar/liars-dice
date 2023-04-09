@@ -5,6 +5,9 @@ const rollBtn = document.querySelector('#rollDice')
 const playerOneBidBtn = document.querySelector('#p1PlaceBid')
 const nextTurn = document.querySelector('#nextTurn')
 
+//non-game-related
+const darkMode = document.querySelector('#darkMode')
+
 /*----------------------------------------
 create player class
 ----------------------------------------*/
@@ -27,27 +30,37 @@ class Player {
     }
     liar() {
         let rng = Math.ceil(Math.random()*100)
+        let currentBidder = game.players[game.lastBid[2]-1]
         let playerCallingLiar = game.players[game.lastBid[2]] //do not change [2]; index would be +1 of their ID bc it's their turn
         let diceCount = game.countDice()
         let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
         console.log(`Liar RNG roll: ${rng}`)
-        if (
-            this.bidStatus() && rng <= 5 
-            || bidDifference == 1 && rng >= 85 
-            || bidDifference == 2 && rng >= 75 
-            || bidDifference == 3 && rng >= 65 
-            || bidDifference > 3 && rng >= 50
-            || bidDifference > 5 && rng >= 10
-            ) {
-                console.log(`${playerCallingLiar.name} has called you a liar! Show your dice!`)
-                game.lastLiarCaller = playerCallingLiar
-                // liarEvent()
+        
+        //if the person who's turn it is, is the last person in the players list, the 'playerCallingLiar' would be p1 (you)
+        if (playerCallingLiar == undefined) {
+            console.log('Will you call them a liar?')
+        }
+
+        //if the next person in line to call liar is not you:
+        else {
+            if (
+                this.bidStatus() && rng <= 5 
+                || bidDifference == 1 && rng >= 85 
+                || bidDifference == 2 && rng >= 75 
+                || bidDifference == 3 && rng >= 65 
+                || bidDifference > 3 && rng >= 50
+                || bidDifference >= 5 && rng >= 10
+                ) {
+                    console.log(`${playerCallingLiar.name} has called ${currentBidder.name} a liar! Show your dice!`)
+                    game.lastLiarCaller = playerCallingLiar
+                    game.liarEvent()
+            }
         }
     }
 }
 
 function liarEvent() {
-// code here
+    console.log("--liarEvent()-- It's time to show your dice!")
 }
 
 // check if the face exists on the board
@@ -147,15 +160,12 @@ Player.prototype.botBid = function() {
                 switch(true) {
                     case rngBidAmt > 95:
                         bidAmt = lastBidAmt + 3
-                        console.log('3')
                         break
                     case rngBidAmt > 80:
                         bidAmt = lastBidAmt + 2
-                        console.log('2')
                         break
                     default:
                         bidAmt = lastBidAmt + 1
-                        console.log('default')
                 }
             } else if (lastBidFace < 6) {
                 raiseBidFace()
@@ -178,6 +188,8 @@ Player.prototype.botBid = function() {
         console.log(`Roll for bidFace: ${rngBidFace}, Roll for bidAmt: ${rngBidAmt}`)
 
         game.lastBid = botBid
+
+        this.liar()
     }
 }
 
@@ -274,10 +286,16 @@ rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
 playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
 nextTurn.addEventListener('click', game.nextTurn)
 
-
+/*----------------------------------------
+add event listeners for non-game-related things
+----------------------------------------*/
+//dark mode toggle
+darkMode.addEventListener('click', changeMode)
+function changeMode() {
+    document.body.classList.toggle('darkMode')
+}
 
 /* to do:
 - event when you are called a liar
 - let other players call each other liar
-- more likely to be called liar the more wrong you are
 */
