@@ -3,6 +3,7 @@ declare variables for gui
 ----------------------------------------*/
 const rollBtn = document.querySelector('#rollDice')
 const playerOneBidBtn = document.querySelector('#p1PlaceBid')
+const callLiarBtn = document.querySelector('#callLiarBtn')
 const nextTurn = document.querySelector('#nextTurn')
 const showDice = document.querySelector('#showDice')
 
@@ -84,8 +85,8 @@ const liar = {
     
         //if the last bidder was not a liar
         if (lastBidder.bidStatus()) {
-            game.lastLiarCollar.numDice--
-            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.lastLiarCaller} loses a die; they now have ${game.lastLiarCollar.numDice} dice.`)
+            game.lastLiarCaller.numDice--
+            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.lastLiarCaller} loses a die; they now have ${game.lastLiarCaller.numDice} dice.`)
         } 
         //if the last bidder WAS a liar, they lose a die; if it's their last die, they are removed from the game
         else {
@@ -110,6 +111,16 @@ const liar = {
     
         showDice.disabled = true
     },
+    callLiar() {
+        //get the index of the current player (should be playerOne, but not hard-coding in case I add multi-player)
+        let currentPlayer  
+        if (game.lastBid[2] == game.players.length-1) {
+            currentPlayer = 0
+        } else {
+            currentPlayer = Number(game.lastBid[2]+1)
+        }
+        console.log(`${game.players[currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`)
+    }
 }
 
 /*----------------------------------------
@@ -277,9 +288,10 @@ const game = {
                 console.log(`It is now ${game.players[currentPlayer].name}'s turn to bid (Index in game.players: ${currentPlayer}).`)
                 game.players[currentPlayer].botBid()
             }
-            //re-enable bid button for player one if it's their turn
+            //re-enable bid & callLiar buttons for player one if it's their turn
             if (currentPlayer == 0 || currentPlayer == game.players.length-1) {
                 playerOneBidBtn.disabled = false
+                callLiarBtn.disabled = false
             }
         }
     },
@@ -333,6 +345,7 @@ add event listeners to roll and bid buttons
 rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
 playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
 nextTurn.addEventListener('click', game.nextTurn)
+callLiarBtn.addEventListener('click', liar.callLiar)
 showDice.addEventListener('click', liar.liarShowDice)
 
 /*----------------------------------------
