@@ -4,6 +4,7 @@ declare variables for gui
 const rollBtn = document.querySelector('#rollDice')
 const playerOneBidBtn = document.querySelector('#p1PlaceBid')
 const nextTurn = document.querySelector('#nextTurn')
+const showDice = document.querySelector('#showDice')
 
 //non-game-related
 const darkMode = document.querySelector('#darkMode')
@@ -18,6 +19,7 @@ class Player {
         this.currentHand = []
         this.playerID = playerNum
         this.playerType = botOrHuman
+        this.hasDice = true
     }
     
     bidStatus() {
@@ -28,12 +30,22 @@ class Player {
                 return false
             }
     }
+}
+
+/*----------------------------------------
+create liar object
+----------------------------------------*/
+
+const liar = {
     liar() {
         let rng = Math.ceil(Math.random()*100)
         let currentBidder = game.players[game.lastBid[2]-1]
+        let lastBidder = game.players[game.lastBid[2]-1]
         let playerCallingLiar = game.players[game.lastBid[2]] //do not change [2]; index would be +1 of their ID bc it's their turn
+        
         let diceCount = game.countDice()
         let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
+        
         console.log(`Liar RNG roll: ${rng}`)
         
         //if the person who's turn it is, is the last person in the players list, the 'playerCallingLiar' would be p1 (you)
@@ -44,7 +56,7 @@ class Player {
         //if the next person in line to call liar is not you:
         else {
             if (
-                this.bidStatus() && rng <= 5 
+                lastBidder.bidStatus() && rng <= 5 
                 || bidDifference == 1 && rng >= 85 
                 || bidDifference == 2 && rng >= 75 
                 || bidDifference == 3 && rng >= 65 
@@ -53,19 +65,48 @@ class Player {
                 ) {
                     console.log(`${playerCallingLiar.name} has called ${currentBidder.name} a liar! Show your dice!`)
                     game.lastLiarCaller = playerCallingLiar
-                    game.liarEvent()
+                    this.liarEvent()
             }
         }
-    }
-}
+    },
 
-function liarEvent() {
-    console.log("--liarEvent()-- It's time to show your dice!")
-}
+    liarEvent() {
+        console.log("--liarEvent()-- It's time to show your dice!")
+    
+        playerOneBidBtn.disabled = true
+        nextTurn.disabled = true
+        showDice.disabled = false
+    
+    },
 
-// check if the face exists on the board
-// if no, set a liar %; if amt goes over a certain % of game.numDice, higher % liar
-// if yes, check how wrong the amt is
+    liarShowDice() {
+        let lastBidder = game.players[game.lastBid[2]-1]
+        let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
+    
+        //if the last bidder was not a liar
+        if (lastBidder.bidStatus()) {
+            game.lastLiarCollar.numDice--
+            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.lastLiarCaller} loses a die; they now have ${game.lastLiarCollar.numDice} dice.`)
+        } 
+        //if the last bidder WAS a liar, they lose a die; if it's their last die, they are removed from the game
+        else {
+            lastBidder.numDice-=5
+            if (lastBidder.numDice > 1) {
+                console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
+            } else {
+                console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
+                playerBeingAccused.hasDice = false
+            }
+            
+        //if playerOne is out of dice
+        if (playerBeingAccused.playerID == 1 && playerBeingAccused.hasDice == false) {
+            console.log('Game over!')
+        }
+        }
+    
+        showDice.disabled = true
+    },
+}
 
 /*----------------------------------------
 player bid
@@ -95,7 +136,7 @@ Player.prototype.bid = function() {
         console.log(`${this.name} has bid: ${bid[1]} of face ${bid[0]}`) // verify functionality
         console.log(game.lastBid) // verify functionality; check if the game object is updating
 
-        this.liar()
+        liar.liar()
 
         //disable bid button for playerOne after their turn
         playerOneBidBtn.disabled = true
@@ -189,7 +230,7 @@ Player.prototype.botBid = function() {
 
         game.lastBid = botBid
 
-        this.liar()
+        liar.liar()
     }
 }
 
@@ -262,6 +303,9 @@ const dice = {
         })
         console.log(game.currentDice)//verify functionality
         console.log(game.countDice())//check how many of each dice are currently in the game
+
+        playerOneBidBtn.disabled = false
+        nextTurn.disabled = false
     },
 }
 
@@ -285,6 +329,7 @@ add event listeners to roll and bid buttons
 rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
 playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
 nextTurn.addEventListener('click', game.nextTurn)
+showDice.addEventListener('click', liar.liarShowDice)
 
 /*----------------------------------------
 add event listeners for non-game-related things
@@ -297,5 +342,5 @@ function changeMode() {
 
 /* to do:
 - event when you are called a liar
-- let other players call each other liar
+- functionality to choose how many players (2-5)
 */
