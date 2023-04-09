@@ -1,6 +1,18 @@
 /* ********************
 html / body styles
 ******************** */
+:root {
+    --body-bg: #f5f5f5;
+    --font-color: #111;
+}
+.darkMode {
+    --body-bg: #252525;
+    --font-color: #f5f5f5;
+}
+body {
+    background-color: var(--body-bg);
+    color: var(--font-color);
+}
 main {
     width: 90%;
     margin: 50px auto;
