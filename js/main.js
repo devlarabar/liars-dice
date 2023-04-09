@@ -279,5 +279,4 @@ nextTurn.addEventListener('click', game.nextTurn)
 /* to do:
 - event when you are called a liar
 - let other players call each other liar
-- more likely to be called liar the more wrong you are
 */
