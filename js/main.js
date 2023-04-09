@@ -39,9 +39,8 @@ create liar object
 const liar = {
     liar() {
         let rng = Math.ceil(Math.random()*100)
-        let currentBidder = game.players[game.lastBid[2]-1]
-        let lastBidder = game.players[game.lastBid[2]-1]
-        let playerCallingLiar = game.players[game.lastBid[2]] //do not change [2]; index would be +1 of their ID bc it's their turn
+        let lastBidder = game.players[game.lastBid[2]]
+        let playerCallingLiar = game.players[game.lastBid[2]+1] //do not change [2]; index would be +1 of their ID bc it's their turn
         
         let diceCount = game.countDice()
         let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
@@ -63,7 +62,7 @@ const liar = {
                 || bidDifference > 3 && rng >= 50
                 || bidDifference >= 5 && rng >= 10
                 ) {
-                    console.log(`${playerCallingLiar.name} has called ${currentBidder.name} a liar! Show your dice!`)
+                    console.log(`${playerCallingLiar.name} has called ${lastBidder.name} a liar! Show your dice!`)
                     game.lastLiarCaller = playerCallingLiar
                     this.liarEvent()
             }
@@ -80,7 +79,7 @@ const liar = {
     },
 
     liarShowDice() {
-        let lastBidder = game.players[game.lastBid[2]-1]
+        let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
     
         //if the last bidder was not a liar
@@ -90,17 +89,22 @@ const liar = {
         } 
         //if the last bidder WAS a liar, they lose a die; if it's their last die, they are removed from the game
         else {
-            lastBidder.numDice-=5
+            lastBidder.numDice--
             if (lastBidder.numDice > 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
             } else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
                 playerBeingAccused.hasDice = false
+                game.players.splice(game.players.indexOf(playerBeingAccused), 1)
             }
             
         //if playerOne is out of dice
         if (playerBeingAccused.playerID == 1 && playerBeingAccused.hasDice == false) {
             console.log('Game over!')
+        }
+        //if playerOne wins
+        if (game.players[0].playerID == 1 && game.players.length == 1) {
+            console.log(`${game.players[0].name} wins!`)
         }
         }
     
@@ -113,7 +117,7 @@ player bid
 ----------------------------------------*/
 Player.prototype.bid = function() {  
     
-    const bid = [Number(document.querySelector(`#p${this.playerID}BidFace`).value), Number(document.querySelector(`#p${this.playerID}BidAmount`).value), Number(this.playerID)]
+    const bid = [Number(document.querySelector(`#p${this.playerID}BidFace`).value), Number(document.querySelector(`#p${this.playerID}BidAmount`).value), game.players.indexOf(this)]
 
     //input validation
     if (game.currentDice[0] == undefined) {
@@ -223,7 +227,7 @@ Player.prototype.botBid = function() {
             bidAmt = game.numDice
         }
 
-        botBid = [bidFace, bidAmt, Number(this.playerID)]
+        botBid = [bidFace, bidAmt, game.players.indexOf(this)]
         console.log(botBid)
         console.log(`Roll for which goes up, bidFace or bidAmt: ${rngWhichBidGoesUp}`)
         console.log(`Roll for bidFace: ${rngBidFace}, Roll for bidAmt: ${rngBidAmt}`)
@@ -264,17 +268,17 @@ const game = {
         if (game.lastBid[2] == undefined) {
             console.error('You must place a bid before proceeding to the next turn.')
         } else {
-            let currentPlayerID //the person who will bid next
-            if (game.lastBid[2] == game.players[game.players.length-1].playerID) {
-                currentPlayerID = 1
+            let currentPlayer //the person who will bid next
+            if (game.lastBid[2] == game.players.length-1) {
+                currentPlayer = 0
                 console.log('It is your turn to bid.')
             } else {
-                currentPlayerID = Number(game.lastBid[2])+1
-                console.log(`It is now ${game.players[currentPlayerID-1].name}'s turn to bid (Index in game.players: ${currentPlayerID-1}).`)
-                game.players[currentPlayerID-1].botBid()
+                currentPlayer = Number(game.lastBid[2]+1)
+                console.log(`It is now ${game.players[currentPlayer].name}'s turn to bid (Index in game.players: ${currentPlayer}).`)
+                game.players[currentPlayer].botBid()
             }
             //re-enable bid button for player one if it's their turn
-            if (currentPlayerID == 1 || currentPlayerID == game.players[game.players.length-1].playerID) {
+            if (currentPlayer == 0 || currentPlayer == game.players.length-1) {
                 playerOneBidBtn.disabled = false
             }
         }
