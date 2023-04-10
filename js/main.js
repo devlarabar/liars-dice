@@ -70,6 +70,17 @@ const liar = {
         }
     },
 
+    callLiar() {
+        //get the index of the current player (should be playerOne, but not hard-coding in case I add multi-player)
+        if (game.lastBid[2] == game.players.length-1) {
+            game.currentPlayer = 0
+        } else {
+            game.currentPlayer = Number(game.lastBid[2]+1)
+        }
+        console.log(`${game.players[game.currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`)
+        this.liarEvent()
+    },
+
     liarEvent() {
         console.log("--liarEvent()-- It's time to show your dice!")
     
@@ -82,6 +93,13 @@ const liar = {
     liarShowDice() {
         let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
+
+        let currentPlayer  
+        if (game.lastBid[2] == game.players.length-1) {
+            currentPlayer = 0
+        } else {
+            currentPlayer = Number(game.lastBid[2]+1)
+        }
     
         //if the last bidder was not a liar
         if (lastBidder.bidStatus()) {
@@ -111,16 +129,6 @@ const liar = {
     
         showDice.disabled = true
     },
-    callLiar() {
-        //get the index of the current player (should be playerOne, but not hard-coding in case I add multi-player)
-        let currentPlayer  
-        if (game.lastBid[2] == game.players.length-1) {
-            currentPlayer = 0
-        } else {
-            currentPlayer = Number(game.lastBid[2]+1)
-        }
-        console.log(`${game.players[currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`)
-    }
 }
 
 /*----------------------------------------
@@ -147,6 +155,8 @@ Player.prototype.bid = function() {
     //update lastBid
     else {
         game.lastBid = bid
+
+        game.currentPlayer = bid[2]
 
         console.log(`${this.name} has bid: ${bid[1]} of face ${bid[0]}`) // verify functionality
         console.log(game.lastBid) // verify functionality; check if the game object is updating
@@ -245,6 +255,8 @@ Player.prototype.botBid = function() {
 
         game.lastBid = botBid
 
+        game.currentPlayer = botBid[2]
+
         liar.liar()
     }
 }
@@ -265,6 +277,7 @@ const game = {
     currentDice: [],
     diceCounts: {},
     lastLiarCaller: '',
+    currentPlayer: '',
     listNumPlayers() {
         console.log(this.players.length)
     },
@@ -345,7 +358,7 @@ add event listeners to roll and bid buttons
 rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
 playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
 nextTurn.addEventListener('click', game.nextTurn)
-callLiarBtn.addEventListener('click', liar.callLiar)
+callLiarBtn.addEventListener('click', liar.callLiar.bind(liar))
 showDice.addEventListener('click', liar.liarShowDice)
 
 /*----------------------------------------
@@ -358,6 +371,5 @@ function changeMode() {
 }
 
 /* to do:
-- event when you are called a liar
 - functionality to choose how many players (2-5)
 */
