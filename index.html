@@ -10,35 +10,40 @@
         <link rel="stylesheet" href="css/style.css"> <!-- main stylesheet-->
     </head>
     <body>
+
+        <nav>
+            <button id="darkMode">Light/Dark</button>
+        </nav>
+
+        <label for="playerOneName">Player 1 Name</label>
+        <input type="text" id="playerOneName" placeholder="Enter your name">
+        <button id="submitPlayerOneName">Set Name</button>
+
+        <label for="playerTwoName">Player 2 Name</label>
+        <input type="text" id="playerTwoName" placeholder="Enter your name">
+        <button id="submitPlayerTwoName">Set Name</button>
+
+        <button id="rollDice">Roll</button>
+
         <main>
-            <nav>
-                <button id="darkMode">Light/Dark</button>
-            </nav>
-            
-            <label for="playerOneName">Player 1 Name</label>
-            <input type="text" id="playerOneName" placeholder="Enter your name">
-            <button id="submitPlayerOneName">Set Name</button>
-
-            <label for="playerTwoName">Player 2 Name</label>
-            <input type="text" id="playerTwoName" placeholder="Enter your name">
-            <button id="submitPlayerTwoName">Set Name</button>
-
-            <button id="rollDice">Roll</button>
-
-            <section class="makeBids">
-                <label for="p1BidAmount">How many</label><input type="number" id="p1BidAmount">
-                <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" max="6">
-                <button id="p1PlaceBid">Place Bid</button>
-                <button id="callLiarBtn" disabled>Liar!</button>
-            </section>
-            <button id="nextTurn">Next Turn</button>
 
             <section class="gameBoard">
                 <section id="playerOneBoard">
+                    <section class="buttons">
+                        <label for="p1BidAmount">How many</label><input type="number" id="p1BidAmount">
+                        <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" max="6">
+                        <button id="p1PlaceBid">Place Bid</button>
+                        <button id="callLiarBtn" disabled>Liar!</button>
+                        <button id="nextTurn">Next Turn</button>
+                    </section>
                 </section>
                 <section id="playerTwoBoard">
                 </section>
                 <section id="playerThreeBoard">
+                </section>
+                <section id="playerFourBoard">
+                </section>
+                <section id="playerFiveBoard">
                 </section>
             </section>
 

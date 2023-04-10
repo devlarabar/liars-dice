@@ -2,7 +2,11 @@
 html / body styles
 ******************** */
 :root {
-    --body-bg: #f5f5f5;
+    --body-bg: #dadada;
+    --p1board-bg: #A5ADC7;
+    --otherplayers-bg: #CBD1E4;
+    --accent-bg: #E4E7F1;
+    --sidebar-bg: #91A1D1;
     --font-color: #111;
 }
 .darkMode {

@@ -42,6 +42,8 @@ const liar = {
         let rng = Math.ceil(Math.random()*100)
         let lastBidder = game.players[game.lastBid[2]]
         let playerCallingLiar = game.players[game.lastBid[2]+1] //do not change [2]; index would be +1 of their ID bc it's their turn
+
+        game.currentPlayer = Number(game.lastBid[2] + 1)
         
         let diceCount = game.countDice()
         let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
@@ -85,6 +87,7 @@ const liar = {
         console.log("--liarEvent()-- It's time to show your dice!")
     
         playerOneBidBtn.disabled = true
+        callLiarBtn.disabled = true
         nextTurn.disabled = true
         showDice.disabled = false
     
@@ -94,22 +97,19 @@ const liar = {
         let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
 
-        let currentPlayer  
-        if (game.lastBid[2] == game.players.length-1) {
-            currentPlayer = 0
-        } else {
-            currentPlayer = Number(game.lastBid[2]+1)
-        }
+        game.lastLiarCaller = game.currentPlayer
     
         //if the last bidder was not a liar
         if (lastBidder.bidStatus()) {
-            game.lastLiarCaller.numDice--
-            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.lastLiarCaller} loses a die; they now have ${game.lastLiarCaller.numDice} dice.`)
+            game.lastRoundWinner = game.lastBid[2]
+            game.players[game.currentPlayer].numDice--
+            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice.`)
         } 
         //if the last bidder WAS a liar, they lose a die; if it's their last die, they are removed from the game
         else {
+            game.lastRoundWinner = game.currentPlayer
             lastBidder.numDice--
-            if (lastBidder.numDice > 1) {
+            if (lastBidder.numDice >= 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
             } else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
@@ -267,17 +267,20 @@ set players
 const playerOne = new Player('1', 'human')
 const playerTwo = new Player('2', 'bot')
 const playerThree = new Player('3', 'bot')
+const playerFour = new Player('4', 'bot')
+const playerFive = new Player('5', 'bot')
 
 /*----------------------------------------
 create game object
 ----------------------------------------*/
 const game = {
-    players: [playerOne, playerTwo, playerThree],
+    players: [playerOne, playerTwo, playerThree, playerFour, playerFive],
     lastBid: [],
     currentDice: [],
     diceCounts: {},
     lastLiarCaller: '',
     currentPlayer: '',
+    lastRoundWinner: 0,
     listNumPlayers() {
         console.log(this.players.length)
     },
@@ -289,9 +292,11 @@ const game = {
         return counts
     },
     nextTurn() {
+        
         if (game.lastBid[2] == undefined) {
             console.error('You must place a bid before proceeding to the next turn.')
-        } else {
+        }
+        else {
             let currentPlayer //the person who will bid next
             if (game.lastBid[2] == game.players.length-1) {
                 currentPlayer = 0
@@ -305,7 +310,7 @@ const game = {
             if (currentPlayer == 0 || currentPlayer == game.players.length-1) {
                 playerOneBidBtn.disabled = false
                 callLiarBtn.disabled = false
-            }
+            } 
         }
     },
 }
@@ -332,9 +337,14 @@ const dice = {
         })
         console.log(game.currentDice)//verify functionality
         console.log(game.countDice())//check how many of each dice are currently in the game
+        
 
-        playerOneBidBtn.disabled = false
-        nextTurn.disabled = false
+        // if (!game.lastBid || game.lastRoundWinner == 0) {
+            playerOneBidBtn.disabled = false
+            nextTurn.disabled = false
+        // } else {
+        //     game.nextTurn()
+        // }
     },
 }
 
@@ -372,4 +382,5 @@ function changeMode() {
 
 /* to do:
 - functionality to choose how many players (2-5)
+- winner of last round goes first after roll
 */
