@@ -1,13 +1,24 @@
 /* ********************
 html / body styles
 ******************** */
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
 :root {
-    --body-bg: #dadada;
-    --p1board-bg: #A5ADC7;
-    --otherplayers-bg: #CBD1E4;
+    --body-bg: #eff2f1;
+    --p1board-bg: none;
+    --otherplayers-bg: #f3f3f3;
     --accent-bg: #E4E7F1;
     --sidebar-bg: #91A1D1;
-    --font-color: #111;
+    --font-color: #1E1E1E;
+    --font-color-light: #fff;
+    --font-family-main: "Roboto", "Helvetica", sans-serif;
+    --font-family-button: "Roboto Mono", monospace;
+}
+html {
+    font-size: 10px;
 }
 .darkMode {
     --body-bg: #252525;
@@ -16,10 +27,16 @@ html / body styles
 body {
     background-color: var(--body-bg);
     color: var(--font-color);
+    font-family: var(--font-family-main);
+    font-size: 1.5rem;
+    line-height: 1.5;
 }
 main {
-    width: 90%;
+    width: 500px;
+    padding: 10px;
     margin: 50px auto;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
 }
 button {
     margin: 5px;
@@ -29,6 +46,111 @@ label {
 }
 label:after {
     content: ':';
+}
+.flex {
+    display: flex;
+    flex-flow: row wrap;
+}
+/* ********************
+headings
+******************** */
+h2 {
+    color: var(--font-color);
+    font-size: 1.8rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* ********************
+game grid
+******************** */
+
+
+/* ********************
+game log
+******************** */
+.movesListContainer {
+    padding: 20px;
+}
+.movesListContainer li {
+    background: #ddd;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin-bottom: 10px;
+    display: block;
+    width: fit-content;
+    color: #1E1E1E;
+}
+.movesListContainer .playerBid {
+    color: #fff;
+    background: green;
+    font-weight: bold;
+}
+.movesListContainer .liarCall {
+    background: red;
+    color: #fff;
+}
+/* ********************
+player boards
+******************** */
+#playerOneBoard {
+    grid-area: p1;
+    background: var(--p1board-bg);
+    padding: 10px;
+    height: 75px;
+}
+.p1DiceDisplay {
+    list-style-type: none;
+    gap: 5px;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+}
+.p1DiceDisplay img {
+    width: 55px;
+    height: 55px;
+}
+.playerBots {
+    grid-area: pBots;
+    gap: 5px;
+    display: none;
+}
+.pBot {
+    background: var(--otherplayers-bg);
+    flex-basis: 100%;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+}
+#playerTwoBoard {
+    grid-area: p2;
+}
+#playerThreeBoard {
+    grid-area: p3;
+}
+#playerFourBoard {
+    grid-area: p4;
+}
+#playerFiveBoard {
+    grid-area: p5;
+}
+
+/* ********************
+buttons and inputs
+******************** */
+.p1PlayerOptions {
+    grid-area: playerOptions;
+    background: var(--p1board-bg);
+    padding: 10px;
+}
+input[type="number"] {
+    width: 80px;
+    height: 30px;
+    border: 0;
+    border-radius: 3px;
+    padding: 3px;
+    margin-right: 10px;
+}
+.buttons {
+    margin-top: 10px;
 }
 /* ********************
 media queries 

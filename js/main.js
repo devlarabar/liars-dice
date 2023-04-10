@@ -7,6 +7,8 @@ const callLiarBtn = document.querySelector('#callLiarBtn')
 const nextTurn = document.querySelector('#nextTurn')
 const showDice = document.querySelector('#showDice')
 
+const movesList = document.querySelector('#movesList')
+
 //non-game-related
 const darkMode = document.querySelector('#darkMode')
 
@@ -43,7 +45,7 @@ const liar = {
         let lastBidder = game.players[game.lastBid[2]]
         let playerCallingLiar = game.players[game.lastBid[2]+1] //do not change [2]; index would be +1 of their ID bc it's their turn
 
-        game.currentPlayer = Number(game.lastBid[2] + 1)
+        game.currentPlayer = Number(game.lastBid[2])
         
         let diceCount = game.countDice()
         let bidDifference = game.lastBid[1] - diceCount[game.lastBid[0]]
@@ -68,6 +70,12 @@ const liar = {
                     console.log(`${playerCallingLiar.name} has called ${lastBidder.name} a liar! Show your dice!`)
                     game.lastLiarCaller = playerCallingLiar
                     this.liarEvent()
+
+                    //insert into DOM
+                    let li = document.createElement('li')
+                    li.innerHTML = `${playerCallingLiar.name} has called ${lastBidder.name} a liar! Show your dice!`
+                    li.setAttribute('class', 'liarCall')
+                    movesList.appendChild(li)
             }
         }
     },
@@ -94,6 +102,9 @@ const liar = {
     },
 
     liarShowDice() {
+
+        //this.liarDiceDisplay()
+
         let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
 
@@ -129,6 +140,11 @@ const liar = {
     
         showDice.disabled = true
     },
+
+    // liarDiceDisplay() {
+    //     let li = document.createElement('li')
+    //     li.innerHTML = ''
+    // }
 }
 
 /*----------------------------------------
@@ -151,6 +167,8 @@ Player.prototype.bid = function() {
         console.error(`Either 'Amount' or 'Face' bid must be greater than the last bid. Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
     } else if (bid[0] < game.lastBid[0] || bid[1] < game.lastBid[1]) {
         console.error(`Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
+    } else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
+        console.error(`It is ${game.players[game.currentPlayer].name}'s turn to play.`)
     }
     //update lastBid
     else {
@@ -161,6 +179,13 @@ Player.prototype.bid = function() {
         console.log(`${this.name} has bid: ${bid[1]} of face ${bid[0]}`) // verify functionality
         console.log(game.lastBid) // verify functionality; check if the game object is updating
 
+        //insert into DOM
+        let li = document.createElement('li')
+        li.setAttribute('class', 'playerBid')
+        li.innerHTML = `${this.name} has bid: ${bid[1]} of face ${bid[0]}`
+        movesList.appendChild(li)
+
+        //run liar function
         liar.liar()
 
         //disable bid button for playerOne after their turn
@@ -257,6 +282,12 @@ Player.prototype.botBid = function() {
 
         game.currentPlayer = botBid[2]
 
+        //insert into DOM
+        let li = document.createElement('li')
+        li.innerHTML = `${game.players[botBid[2]].name} has bid: ${botBid[1]} of face ${botBid[0]}`
+        movesList.appendChild(li)
+
+        //run liar function
         liar.liar()
     }
 }
@@ -321,16 +352,36 @@ create dice object
 ----------------------------------------*/
 const dice = {
     faces: 6,
+    face1: 'assets/die-1.png',
+    face2: 'assets/die-2.png',
+    face3: 'assets/die-3.png',
+    face4: 'assets/die-4.png',
+    face5: 'assets/die-5.png',
+    face6: 'assets/die-6.png',
     roll() {
         return Math.ceil(Math.random()*6)
     },
     rollAllDice() {
+
+        //it gave me a bug without this (said not my turn), will fix this later
+        game.currentPlayer = 0
+
         game.lastBid = []
         game.currentDice = []
+        document.querySelector('.p1DiceDisplay').innerHTML = '' //clear playerOne dice display
         game.players.forEach(x => {
             x.currentHand = []
             for (let i = 0; i < x.numDice; i++) {
-                x.currentHand.push(dice.roll())
+                let die = dice.roll()
+                x.currentHand.push(die)
+
+                //insert dice imgs into DOM for playerOne
+                if (x == playerOne) {
+                    let dieImg = this[`face${die}`]
+                    let li = document.createElement('li')
+                    li.innerHTML = `<img src="${dieImg}">`
+                    document.querySelector('.p1DiceDisplay').appendChild(li)
+                }
             }
             console.log(`${x.name}'s current hand: ${x.currentHand}`) //verify functionality
             game.currentDice.push(...x.currentHand)
