@@ -97,30 +97,67 @@ game log
     text-align: center;
     margin-bottom: 10px;
 }
+#movesList {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
 .movesListContainer li {
-    background: #ddd;
     border-radius: 10px;
     padding: 5px 15px;
     margin-bottom: 10px;
     display: block;
     width: fit-content;
-    color: #1E1E1E;
-    float: right;
     clear: both;
 }
-.movesListContainer .playerBid {
+.rollDiceMessage {
+    background: none;
+    text-align: center;
+}
+.showAllDiceLi {
+    background: none;
+}
+.showAllDice {
+    background: none;
+}
+.showAllDiceLi:before {
+    content: 'All dice:';
+    text-align: center;
+    margin-bottom: 4px;
+    display: block;
+}
+.showAllDice li {
+    padding: 0;
+    margin: 0;
+    background: none;
+}
+.showAllDice img {
+    width: 26px;
+    height: 26px;
+    margin: 2px;
+}
+.playerBid {
     color: #fff;
     background: green;
     font-weight: bold;
-    float: left;
+    align-self: flex-start;
     clear: both;
 }
-.movesListContainer .liarCall {
+.botBidLi {
+    background: #ddd;
+    color: #1E1E1E;
+    align-self: flex-end;
+}
+.liarCall {
     background: red;
     color: #fff;
 }
-.movesListContainer .liarEvent {
+.liarEvent {
     background: #cacaca;
+}
+.winner {
+    background: green;
+    color: #fff;
 }
 /* ********************
 player boards
