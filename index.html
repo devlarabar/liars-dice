@@ -5,7 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Liar's Dice</title>
+        <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2102/2102161.png">
         <!-- external stylesheets & fonts -->
+        <script src="https://kit.fontawesome.com/ce6dc40760.js" crossorigin="anonymous"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Amatic+SC&family=Bebas+Neue&family=Calistoga&family=Chewy&family=Lato:wght@100;300;400;700&family=Major+Mono+Display&family=Nothing+You+Could+Do&family=Passion+One&family=Rajdhani&family=Roboto+Condensed:wght@300&family=Roboto+Serif:ital@0;1&family=Roboto:wght@300&family=Ubuntu+Mono&family=VT323&display=swap" rel="stylesheet">
@@ -14,6 +16,7 @@
     </head>
     <body>
 
+        <section class="hide">
         <nav>
             <button id="darkMode">Light/Dark</button>
         </nav>
@@ -25,25 +28,34 @@
         <label for="playerTwoName">Player 2 Name</label>
         <input type="text" id="playerTwoName" placeholder="Enter your name">
         <button id="submitPlayerTwoName">Set Name</button>
+        </section>
 
         <main>
 
             <section class="gameBoard">
-
-
+                <header class="flex">
+                    <h1><i class="fa-solid fa-cube"></i> Liar's Dice</h1><span><a href="https://github.com/devlarabar/liars-dice"><i class="fa-brands fa-github"></i></a></span>
+                </header>
                 <section id="playerOneBoard">
                     <ul class="p1DiceDisplay flex">
                     </ul>
+                    <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                    </div>
+                    <div class="lastBid">
+                        <h6>Last Bid</h6>
+                        <span></span>
+                    </div>
                 </section>
 
                 <section class="movesListContainer">
+                    <span class="movesListIntro">This is where your game takes place!</span>
                     <ul id="movesList">
                     </ul>
                 </section>
 
                 <section class="p1PlayerOptions">
-                    <label for="p1BidAmount">Amount</label><input type="number" id="p1BidAmount">
-                    <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" max="6">
+                    <label for="p1BidAmount">Amount</label><input type="number" id="p1BidAmount" min="1">
+                    <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" min="1" max="6">
                     <section class="buttons flex">
                         <button id="rollDice">Roll</button>                
                         <button id="p1PlaceBid">Place Bid</button>
@@ -53,17 +65,41 @@
                     </section>
                 </section>
                 <section class="playerBots flex">
-                    <section id="playerTwoBoard" class="pBot">
+                    <section id="playerTwoBoard" class="pBot flex">
                         <h2>Player Two</h2>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        </div>
+                        <div class="lastBid">
+                            <h6>Last Bid</h6>
+                            <span></span>
+                        </div>
                     </section>
-                    <section id="playerThreeBoard" class="pBot">
+                    <section id="playerThreeBoard" class="pBot flex">
                         <h2>Player Three</h2>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        </div>
+                        <div class="lastBid">
+                            <h6>Last Bid</h6>
+                            <span></span>
+                        </div>
                     </section>
-                    <section id="playerFourBoard" class="pBot">
+                    <section id="playerFourBoard" class="pBot flex">
                         <h2>Player Four</h2>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        </div>
+                        <div class="lastBid">
+                            <h6>Last Bid</h6>
+                            <span></span>
+                        </div>
                     </section>
-                    <section id="playerFiveBoard" class="pBot">
+                    <section id="playerFiveBoard" class="pBot flex">
                         <h2>Player Five</h2>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        </div>
+                        <div class="lastBid">
+                            <h6>Last Bid</h6>
+                            <span></span>
+                        </div>
                     </section>
                 </section>
             </section>

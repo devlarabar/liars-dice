@@ -16,9 +16,11 @@ html / body styles
     --font-color-light: #fff;
     --font-family-main: "Roboto", "Helvetica", sans-serif;
     --font-family-button: "Roboto Mono", monospace;
+    --font-title: "Calistoga", monospace;
 }
 html {
     font-size: 10px;
+    scroll-behavior: smooth;
 }
 .darkMode {
     --body-bg: #252525;
@@ -31,10 +33,14 @@ body {
     font-size: 1.5rem;
     line-height: 1.5;
 }
+header {
+    justify-content: space-between;
+    font-size: 3rem;
+}
 main {
     width: 500px;
     padding: 10px;
-    margin: 50px auto;
+    margin: 10px auto;
     border-radius: 5px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
 }
@@ -54,11 +60,22 @@ label:after {
 /* ********************
 headings
 ******************** */
+h1 {
+    font-size: 3rem;
+    font-family: var(--font-title);
+    font-weight: bold;
+}
 h2 {
     color: var(--font-color);
     font-size: 1.8rem;
     text-align: center;
     text-transform: uppercase;
+}
+h6 {
+    display: inline-block;
+}
+h6:after {
+    content: ':';
 }
 
 /* ********************
@@ -71,24 +88,39 @@ game log
 ******************** */
 .movesListContainer {
     padding: 20px;
+    height: 250px;
+    overflow: auto;
+}
+.movesListIntro {
+    display: block;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 10px;
 }
 .movesListContainer li {
     background: #ddd;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 5px 15px;
     margin-bottom: 10px;
     display: block;
     width: fit-content;
     color: #1E1E1E;
+    float: right;
+    clear: both;
 }
 .movesListContainer .playerBid {
     color: #fff;
     background: green;
     font-weight: bold;
+    float: left;
+    clear: both;
 }
 .movesListContainer .liarCall {
     background: red;
     color: #fff;
+}
+.movesListContainer .liarEvent {
+    background: #cacaca;
 }
 /* ********************
 player boards
@@ -96,15 +128,28 @@ player boards
 #playerOneBoard {
     grid-area: p1;
     background: var(--p1board-bg);
-    padding: 10px;
-    height: 75px;
+    padding: 15px;
+    height: 130px;
+    display: grid;
+    grid-template-areas: 'dice dice' 'diceRemaining lastBid';
+    grid-template-columns: 1fr 1fr;
 }
 .p1DiceDisplay {
     list-style-type: none;
-    gap: 5px;
+    gap: 25px;
     justify-content: space-around;
     align-items: center;
     margin: auto;
+    grid-area: dice;
+    height: 75px;
+}
+#playerOneBoard .diceRemaining {
+    grid-area: diceRemaining;
+    text-align: left;
+}
+#playerOneBoard .lastBid {
+    grid-area: lastBid;
+    text-align: right;
 }
 .p1DiceDisplay img {
     width: 55px;
@@ -113,12 +158,22 @@ player boards
 .playerBots {
     grid-area: pBots;
     gap: 5px;
-    display: none;
+}
+.playerBots h2 {
+    width: 150px;
+    text-align: left;
 }
 .pBot {
     background: var(--otherplayers-bg);
     flex-basis: 100%;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    justify-content: space-between;
+    padding: 3px 8px;
+}
+.pBot:nth-of-type(-2n + 3) {
+    background: #d6d6d6;
+}
+.diceRemaining {
+    text-align: right;
 }
 #playerTwoBoard {
     grid-area: p2;
@@ -131,6 +186,10 @@ player boards
 }
 #playerFiveBoard {
     grid-area: p5;
+}
+.bidDie {
+    width: 20px;
+    height: 20px;
 }
 
 /* ********************
@@ -155,3 +214,26 @@ input[type="number"] {
 /* ********************
 media queries 
 ******************** */
+
+/* ********************
+animation
+******************** */
+@keyframes movesListAppend {
+    0% {
+        transform: scale(0);
+		opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+		opacity: 1;
+    }
+}
+.movesListAppend {
+    animation: movesListAppend .2s linear;
+}
+
+
+
+.hide {
+    display: none;
+}

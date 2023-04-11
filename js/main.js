@@ -76,6 +76,8 @@ const liar = {
                     li.innerHTML = `${playerCallingLiar.name} has called ${lastBidder.name} a liar! Show your dice!`
                     li.setAttribute('class', 'liarCall')
                     movesList.appendChild(li)
+                    li.scrollIntoView({behavior: "smooth"})
+                    li.classList.add('li', 'movesListAppend')
             }
         }
     },
@@ -89,6 +91,14 @@ const liar = {
         }
         console.log(`${game.players[game.currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`)
         this.liarEvent()
+
+        //insert into DOM
+        let li = document.createElement('li')
+        li.innerHTML = `${game.players[game.currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`
+        li.setAttribute('class', 'liarCall')
+        movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
     },
 
     liarEvent() {
@@ -108,6 +118,12 @@ const liar = {
         let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
 
+        if (game.lastBid[2] == game.players.length-1) {
+            game.currentPlayer = 0
+        } else {
+            game.currentPlayer = Number(game.lastBid[2] + 1)
+        }
+
         game.lastLiarCaller = game.currentPlayer
     
         //if the last bidder was not a liar
@@ -115,15 +131,70 @@ const liar = {
             game.lastRoundWinner = game.lastBid[2]
             game.players[game.currentPlayer].numDice--
             console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice.`)
+            
+            //insert into DOM
+            let li = document.createElement('li')
+            li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice`
+            li.setAttribute('class', 'liarEvent')
+            movesList.appendChild(li)
+            li.scrollIntoView({behavior: "smooth"})
+            li.classList.add('li', 'movesListAppend')
+
+            let diceRemainingDisplay
+            switch(game.players[game.currentPlayer].playerID) {
+                case '1':
+                    diceRemainingDisplay = document.querySelector('#playerOneBoard .diceRemaining span')
+                    break
+                case '2':
+                    diceRemainingDisplay = document.querySelector('#playerTwoBoard .diceRemaining span')
+                    break
+                case '3':
+                    diceRemainingDisplay = document.querySelector('#playerThreeBoard .diceRemaining span')
+                    break
+                case '4':
+                    diceRemainingDisplay = document.querySelector('#playerFourBoard .diceRemaining span')
+                    break
+                case '5':
+                    diceRemainingDisplay = document.querySelector('#playerFiveBoard .diceRemaining span')
+            }
+            diceRemainingDisplay.innerHTML = `${game.players[game.currentPlayer].numDice}`
         } 
         //if the last bidder WAS a liar, they lose a die; if it's their last die, they are removed from the game
         else {
             game.lastRoundWinner = game.currentPlayer
             lastBidder.numDice--
+            //insert into DOM
+            let li = document.createElement('li')
+            li.setAttribute('class', 'liarEvent')
+            movesList.appendChild(li)
+            li.scrollIntoView({behavior: "smooth"})
+            li.classList.add('li', 'movesListAppend')
+
+            let diceRemainingDisplay
+            switch(lastBidder.playerID) {
+                case '1':
+                    diceRemainingDisplay = document.querySelector('#playerOneBoard .diceRemaining span')
+                    break
+                case '2':
+                    diceRemainingDisplay = document.querySelector('#playerTwoBoard .diceRemaining span')
+                    break
+                case '3':
+                    diceRemainingDisplay = document.querySelector('#playerThreeBoard .diceRemaining span')
+                    break
+                case '4':
+                    diceRemainingDisplay = document.querySelector('#playerFourBoard .diceRemaining span')
+                    break
+                case '5':
+                    diceRemainingDisplay = document.querySelector('#playerFiveBoard .diceRemaining span')
+            }
+            diceRemainingDisplay.innerHTML = `${lastBidder.numDice}`
+
             if (lastBidder.numDice >= 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
+                li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`
             } else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
+                li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`
                 playerBeingAccused.hasDice = false
                 game.players.splice(game.players.indexOf(playerBeingAccused), 1)
             }
@@ -140,11 +211,6 @@ const liar = {
     
         showDice.disabled = true
     },
-
-    // liarDiceDisplay() {
-    //     let li = document.createElement('li')
-    //     li.innerHTML = ''
-    // }
 }
 
 /*----------------------------------------
@@ -180,10 +246,33 @@ Player.prototype.bid = function() {
         console.log(game.lastBid) // verify functionality; check if the game object is updating
 
         //insert into DOM
+        let faceImg = dice[`face${bid[0]}fa`]
+
         let li = document.createElement('li')
         li.setAttribute('class', 'playerBid')
-        li.innerHTML = `${this.name} has bid: ${bid[1]} of face ${bid[0]}`
+        li.innerHTML = `${this.name} has bid: ${bid[1]} ${faceImg}`
         movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
+
+        let lastBidDisplay
+            switch(this.playerID) {
+                case '1':
+                    lastBidDisplay = document.querySelector('#playerOneBoard .lastBid span')
+                    break
+                case '2':
+                    lastBidDisplay = document.querySelector('#playerTwoBoard .lastBid span')
+                    break
+                case '3':
+                    lastBidDisplay = document.querySelector('#playerThreeBoard .lastBid span')
+                    break
+                case '4':
+                    lastBidDisplay = document.querySelector('#playerFourBoard .lastBid span')
+                    break
+                case '5':
+                    lastBidDisplay = document.querySelector('#playerFiveBoard .lastBid span')
+            }
+        lastBidDisplay.innerHTML = `${bid[1]} ${faceImg}`
 
         //run liar function
         liar.liar()
@@ -283,9 +372,32 @@ Player.prototype.botBid = function() {
         game.currentPlayer = botBid[2]
 
         //insert into DOM
+        let faceImg = dice[`face${botBid[0]}fa`]
+
         let li = document.createElement('li')
-        li.innerHTML = `${game.players[botBid[2]].name} has bid: ${botBid[1]} of face ${botBid[0]}`
+        li.innerHTML = `${game.players[botBid[2]].name} has bid: ${botBid[1]} ${faceImg}`
         movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
+
+        let lastBidDisplay
+            switch(this.playerID) {
+                case '1':
+                    lastBidDisplay = document.querySelector('#playerOneBoard .lastBid span')
+                    break
+                case '2':
+                    lastBidDisplay = document.querySelector('#playerTwoBoard .lastBid span')
+                    break
+                case '3':
+                    lastBidDisplay = document.querySelector('#playerThreeBoard .lastBid span')
+                    break
+                case '4':
+                    lastBidDisplay = document.querySelector('#playerFourBoard .lastBid span')
+                    break
+                case '5':
+                    lastBidDisplay = document.querySelector('#playerFiveBoard .lastBid span')
+            }
+        lastBidDisplay.innerHTML = `${botBid[1]} ${faceImg}`
 
         //run liar function
         liar.liar()
@@ -358,6 +470,12 @@ const dice = {
     face4: 'assets/die-4.png',
     face5: 'assets/die-5.png',
     face6: 'assets/die-6.png',
+    face1fa: '<i class="fa-solid fa-dice-one"></i>',
+    face2fa: '<i class="fa-solid fa-dice-two"></i>',
+    face3fa: '<i class="fa-solid fa-dice-three"></i>',
+    face4fa: '<i class="fa-solid fa-dice-four"></i>',
+    face5fa: '<i class="fa-solid fa-dice-five"></i>',
+    face6fa: '<i class="fa-solid fa-dice-six"></i>',
     roll() {
         return Math.ceil(Math.random()*6)
     },
