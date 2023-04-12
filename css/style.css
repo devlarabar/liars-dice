@@ -8,13 +8,14 @@ html / body styles
 }
 :root {
     --body-bg: #eff2f1;
-    --p1board-bg: none;
+    --main-bg: #fff;
     --otherplayers-bg: #f3f3f3;
     --accent-bg: #E4E7F1;
     --sidebar-bg: #91A1D1;
     --font-color: #1E1E1E;
     --font-color-light: #fff;
     --font-family-main: "Roboto", "Helvetica", sans-serif;
+    --font-family-playerNames: "Helvetica", sans-serif;
     --font-family-button: "Roboto Mono", monospace;
     --font-title: "Calistoga", monospace;
 }
@@ -28,6 +29,8 @@ html {
 }
 body {
     background-color: var(--body-bg);
+    background: rgb(160,208,202);
+background: radial-gradient(circle, rgba(160,208,202,1) 0%, rgba(226,226,226,1) 100%);
     color: var(--font-color);
     font-family: var(--font-family-main);
     font-size: 1.5rem;
@@ -43,6 +46,7 @@ main {
     margin: 10px auto;
     border-radius: 5px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    background: var(--main-bg);
 }
 button {
     margin: 5px;
@@ -69,7 +73,7 @@ h2 {
     color: var(--font-color);
     font-size: 1.8rem;
     text-align: center;
-    text-transform: uppercase;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 h6 {
     display: inline-block;
@@ -248,6 +252,42 @@ input[type="number"] {
 .buttons {
     margin-top: 10px;
 }
+
+/* ********************
+choose players popup
+******************** */
+.choosePlayersPopup {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 20px;
+    background: var(--accent-bg);
+    padding: 20px;
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-content: center;
+}
+.choosePlayersPopup h2 {
+    text-align: center;
+    font-family: var(--font-title);
+    text-transform: none;
+    flex-basis: 100%;
+    margin-bottom: 20px;
+}
+.playerOptionsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    margin: auto;
+}
+.playerOptionsContainer button {
+    width: 80px;
+    height: 80px;
+    font-weight: bold;
+    padding: 20px;
+}
 /* ********************
 media queries 
 ******************** */
@@ -271,6 +311,6 @@ animation
 
 
 
-.hide {
+.hidden {
     display: none;
 }

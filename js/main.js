@@ -8,9 +8,28 @@ const gameBoard = {
     nextTurnBtn: document.querySelector('#nextTurn'),
     showDiceBtn: document.querySelector('#showDice'),
     movesList: document.querySelector('#movesList'),
+    choosePlayersBtns: Array.from(document.querySelectorAll('.choosePlayersBtn')),
+    choosePlayersPopup: document.querySelector('.choosePlayersPopup'),
+    // playerBoards: [document.querySelector(playerOne.playerBoard), document.querySelector(playerTwo.playerBoard), document.querySelector(playerThree.playerBoard), document.querySelector(playerFour.playerBoard), document.querySelector(playerFive.playerBoard)],
 
     buttonStatus() {
         //code here
+    },
+
+    visiblePlayerBoards() {
+        switch(game.players.length) {
+            case 2:
+                document.querySelector(playerThree.playerBoard).classList.add('hidden')
+                document.querySelector(playerFour.playerBoard).classList.add('hidden')
+                document.querySelector(playerFive.playerBoard).classList.add('hidden')
+                break
+            case 3:
+                document.querySelector(playerFour.playerBoard).classList.add('hidden')
+                document.querySelector(playerFive.playerBoard).classList.add('hidden')
+                break
+            case 4:
+                document.querySelector(playerFive.playerBoard).classList.add('hidden')
+        }
     }
 }
 
@@ -441,15 +460,18 @@ create game object
 ----------------------------------------*/
 const game = {
     players: [playerOne, playerTwo, playerThree, playerFour, playerFive],
+    numPlayersChosen: 5,
     lastBid: [],
     currentDice: [],
     diceCounts: {},
     lastLiarCaller: '',
     currentPlayer: '',
     lastRoundWinner: 0,
+
     listNumPlayers() {
         console.log(this.players.length)
     },
+
     countDice() {
         const counts = {}
         for (let face of game.currentDice) {
@@ -457,6 +479,7 @@ const game = {
         }
         return counts
     },
+
     nextTurn() {
         
         if (game.lastBid[2] == undefined) {
@@ -487,6 +510,30 @@ const game = {
         gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
         li.classList.add('li', 'movesListAppend')
+    },
+
+    choosePlayers() {
+        console.log(gameBoard.choosePlayersBtns)
+        gameBoard.choosePlayersBtns.forEach(x => {
+            x.addEventListener('click', () => {
+                switch(true) {
+                    case x.innerHTML.includes('1'):
+                        this.numPlayersChosen = 2
+                        break
+                    case x.innerHTML.includes('2'):
+                        this.numPlayersChosen = 3
+                        break
+                    case x.innerHTML.includes('3'):
+                        this.numPlayersChosen = 4
+                        break
+                    default: 
+                        this.numPlayersChosen = 5
+                }
+                game.players = game.players.splice(0, this.numPlayersChosen)
+                gameBoard.visiblePlayerBoards()
+                gameBoard.choosePlayersPopup.classList.add('hidden')
+            })
+        })
     }
 }
 game.numDice = game.players.length*5
@@ -639,8 +686,13 @@ function changeMode() {
     document.body.classList.toggle('darkMode')
 }
 
+/*----------------------------------------
+on page load, choose players
+----------------------------------------*/
+
+game.choosePlayers()
+
 /* to do:
-- functionality to choose how many players (2-5)
 - if game.players.length == 2 && game.currentDice.length == 2, change the game to be the sum of both faces. keep bidding until one calls liar. if the last bid was <= sum, they win.
 - a separate function in game object to see which buttons should be disabled or not
 */
