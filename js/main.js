@@ -236,6 +236,10 @@ Player.prototype.bid = function() {
         console.log(`${this.name} has bid: ${bid[1]} of face ${bid[0]}`) // verify functionality
         console.log(game.lastBid) // verify functionality; check if the game object is updating
 
+        //clear bid inputs
+        document.querySelector(`#p${this.playerID}BidFace`).value = ''
+        document.querySelector(`#p${this.playerID}BidAmount`).value = ''
+
         //insert into DOM
         this.movesListAppend()
 
@@ -245,6 +249,7 @@ Player.prototype.bid = function() {
         //disable bid button for playerOne after their turn
         gameBoard.playerOneBidBtn.disabled = true
         gameBoard.callLiarBtn.disabled = true
+        gameBoard.nextTurnBtn.disabled = false
     }
 }
 
@@ -317,7 +322,7 @@ Player.prototype.botBidNewRound = function() {
     gameBoard.nextTurnBtn.disabled = false;
     //if the bidder is the last player in the game, re-enable playerOne buttons
     if (game.currentPlayer == game.players.length-1) {
-        gameBoard.playerOneBidBtn.disabled = false, gameBoard.nextTurnBtn.disabled = false, gameBoard.callLiarBtn.disabled = false
+        gameBoard.playerOneBidBtn.disabled = false, gameBoard.nextTurnBtn.disabled = true, gameBoard.callLiarBtn.disabled = false
     } 
 }
 
@@ -499,6 +504,7 @@ const game = {
             if (currentPlayer == 0 || currentPlayer == game.players.length-1) {
                 gameBoard.playerOneBidBtn.disabled = false
                 gameBoard.callLiarBtn.disabled = false
+                gameBoard.nextTurnBtn.disabled = true
             } 
         }
     },
@@ -595,7 +601,7 @@ const dice = {
         } else {
             game.currentPlayer = 0
             gameBoard.playerOneBidBtn.disabled = false
-            gameBoard.nextTurnBtn.disabled = false
+            gameBoard.nextTurnBtn.disabled = true
         }
     },
 
@@ -691,6 +697,7 @@ on page load, choose players
 ----------------------------------------*/
 
 game.choosePlayers()
+gameBoard.playerOneBidBtn.disabled = true
 
 /* to do:
 - if game.players.length == 2 && game.currentDice.length == 2, change the game to be the sum of both faces. keep bidding until one calls liar. if the last bid was <= sum, they win.

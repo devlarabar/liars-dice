@@ -7,17 +7,21 @@ html / body styles
     box-sizing: border-box;
 }
 :root {
-    --body-bg: #eff2f1;
-    --main-bg: #fff;
+    --body-bg: #e2e2e2;
+    --main-bg: rgba(255, 255, 255, 0.65);
     --otherplayers-bg: #f3f3f3;
     --accent-bg: #E4E7F1;
-    --sidebar-bg: #91A1D1;
+    --color-button: #474350;
+    --header-bg: #D64F0A;
+    --accent-color: #519e8a;
+    --accent-color2: #f26419;
     --font-color: #1E1E1E;
     --font-color-light: #fff;
     --font-family-main: "Roboto", "Helvetica", sans-serif;
     --font-family-playerNames: "Helvetica", sans-serif;
-    --font-family-button: "Roboto Mono", monospace;
+    --font-family-button: "Roboto", sans-serif;
     --font-title: "Calistoga", monospace;
+    --padding: 15px;
 }
 html {
     font-size: 10px;
@@ -29,24 +33,21 @@ html {
 }
 body {
     background-color: var(--body-bg);
-    background: rgb(160,208,202);
-background: radial-gradient(circle, rgba(160,208,202,1) 0%, rgba(226,226,226,1) 100%);
     color: var(--font-color);
     font-family: var(--font-family-main);
     font-size: 1.5rem;
     line-height: 1.5;
 }
-header {
-    justify-content: space-between;
-    font-size: 3rem;
-}
 main {
-    width: 500px;
-    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    padding: 0px;
     margin: 10px auto;
     border-radius: 5px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3); */
     background: var(--main-bg);
+    border-radius: 30px;
 }
 button {
     margin: 5px;
@@ -61,6 +62,27 @@ label:after {
     display: flex;
     flex-flow: row wrap;
 }
+
+/* ********************
+header
+******************** */
+header {
+    justify-content: space-between;
+    font-size: 3rem;
+    padding: var(--padding);
+    background: var(--header-bg);
+    color: var(--font-color-light);
+    letter-spacing: 1px;
+    font-weight: normal;
+    border-radius: 30px 30px 0 0;
+}
+header a {
+    color: #fff;
+}
+header a:hover {
+    color: var(--color-button);
+}
+
 /* ********************
 headings
 ******************** */
@@ -77,6 +99,7 @@ h2 {
 }
 h6 {
     display: inline-block;
+    color: var(--font-color);
 }
 h6:after {
     content: ':';
@@ -168,12 +191,11 @@ player boards
 ******************** */
 #player1Board {
     grid-area: p1;
-    background: var(--p1board-bg);
-    padding: 15px;
     height: 130px;
     display: grid;
     grid-template-areas: 'dice dice' 'diceRemaining lastBid';
     grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid #EDEDED;
 }
 .p1DiceDisplay {
     list-style-type: none;
@@ -187,18 +209,20 @@ player boards
 #player1Board .diceRemaining {
     grid-area: diceRemaining;
     text-align: left;
+    padding-left: var(--padding);
 }
 #player1Board .lastBid {
     grid-area: lastBid;
     text-align: right;
+    padding-right: var(--padding);
 }
 .p1DiceDisplay img {
-    width: 55px;
-    height: 55px;
+    width: 75px;
+    height: 75px;
 }
 .playerBots {
     grid-area: pBots;
-    gap: 5px;
+    gap: 0px;
 }
 .playerBots h2 {
     width: 150px;
@@ -209,6 +233,7 @@ player boards
     flex-basis: 100%;
     justify-content: space-between;
     padding: 3px 8px;
+    align-items: center;
 }
 .pBot:nth-of-type(-2n + 3) {
     background: #d6d6d6;
@@ -232,14 +257,20 @@ player boards
     width: 20px;
     height: 20px;
 }
-
+.fa-dice {
+    color: var(--accent-color);
+}
 /* ********************
 buttons and inputs
 ******************** */
 .p1PlayerOptions {
     grid-area: playerOptions;
     background: var(--p1board-bg);
-    padding: 10px;
+    padding: 0px;
+}
+form {
+    justify-content: center;
+    align-items: center;
 }
 input[type="number"] {
     width: 80px;
@@ -252,13 +283,30 @@ input[type="number"] {
 .buttons {
     margin-top: 10px;
 }
-
+.buttons button {
+    padding: 10px;
+    flex: 1;
+    border: 0;
+    background: var(--accent-color);
+    color: var(--font-color-light);
+    margin: 0;
+    font-family: var(--font-family-button);
+}
+.buttons button:enabled {
+    transform: scale(1.06)
+}
+.buttons button:disabled {
+    background: var(--color-button);
+}
+.buttons button:enabled:hover {
+    background: var(--accent-color2);
+}
 /* ********************
 choose players popup
 ******************** */
 .choosePlayersPopup {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     border-radius: 20px;
     background: var(--accent-bg);
     padding: 20px;
@@ -293,6 +341,16 @@ media queries
 ******************** */
 
 /* ********************
+misc styles
+******************** */
+.hidden {
+    display: none;
+}
+.movesListAppend {
+    animation: movesListAppend .2s linear;
+}
+
+/* ********************
 animation
 ******************** */
 @keyframes movesListAppend {
@@ -305,12 +363,5 @@ animation
 		opacity: 1;
     }
 }
-.movesListAppend {
-    animation: movesListAppend .2s linear;
-}
 
 
-
-.hidden {
-    display: none;
-}
