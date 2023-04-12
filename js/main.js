@@ -1,13 +1,19 @@
 /*----------------------------------------
 declare variables for gui
 ----------------------------------------*/
-const rollBtn = document.querySelector('#rollDice')
-const playerOneBidBtn = document.querySelector('#p1PlaceBid')
-const callLiarBtn = document.querySelector('#callLiarBtn')
-const nextTurn = document.querySelector('#nextTurn')
-const showDice = document.querySelector('#showDice')
+const gameBoard = {
+    rollBtn: document.querySelector('#rollDice'),
+    playerOneBidBtn: document.querySelector('#p1PlaceBid'),
+    callLiarBtn: document.querySelector('#callLiarBtn'),
+    nextTurnBtn: document.querySelector('#nextTurn'),
+    showDiceBtn: document.querySelector('#showDice'),
+    movesList: document.querySelector('#movesList'),
 
-const movesList = document.querySelector('#movesList')
+    buttonStatus() {
+        //code here
+    }
+}
+
 
 //non-game-related
 const darkMode = document.querySelector('#darkMode')
@@ -76,7 +82,7 @@ const liar = {
                     let li = document.createElement('li')
                     li.innerHTML = `${playerCallingLiar.name} has called ${lastBidder.name} a liar! Show your dice!`
                     li.setAttribute('class', 'liarCall')
-                    movesList.appendChild(li)
+                    gameBoard.movesList.appendChild(li)
                     li.scrollIntoView({behavior: "smooth"})
                     li.classList.add('li', 'movesListAppend')
             }
@@ -97,7 +103,7 @@ const liar = {
         let li = document.createElement('li')
         li.innerHTML = `${game.players[game.currentPlayer].name} has called ${game.players[game.lastBid[2]].name} a liar!`
         li.setAttribute('class', 'liarCall')
-        movesList.appendChild(li)
+        gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
         li.classList.add('li', 'movesListAppend')
     },
@@ -105,10 +111,10 @@ const liar = {
     liarEvent() {
         console.log("--liarEvent()-- It's time to show your dice!")
     
-        playerOneBidBtn.disabled = true
-        callLiarBtn.disabled = true
-        nextTurn.disabled = true
-        showDice.disabled = false
+        gameBoard.playerOneBidBtn.disabled = true
+        gameBoard.callLiarBtn.disabled = true
+        gameBoard.nextTurnBtn.disabled = true
+        gameBoard.showDiceBtn.disabled = false
     
     },
 
@@ -156,13 +162,13 @@ const liar = {
             }
         }
     
-        showDice.disabled = true
-        rollBtn.disabled = false
+        gameBoard.showDiceBtn.disabled = true
+        gameBoard.rollBtn.disabled = false
     },
 
     liarDiceDisplay() {
         let liDice = document.createElement('li')
-        document.querySelector('#movesList').appendChild(liDice)
+        gameBoard.movesList.appendChild(liDice)
         liDice.setAttribute('class', 'showAllDiceLi')
         let diceDisplay = document.createElement('ul')
         diceDisplay.setAttribute('class', 'showAllDice flex')
@@ -218,7 +224,8 @@ Player.prototype.bid = function() {
         liar.liar()
 
         //disable bid button for playerOne after their turn
-        playerOneBidBtn.disabled = true
+        gameBoard.playerOneBidBtn.disabled = true
+        gameBoard.callLiarBtn.disabled = true
     }
 }
 
@@ -288,10 +295,10 @@ Player.prototype.botBidNewRound = function() {
     //run liar function
     liar.liar()
 
-    nextTurn.disabled = false;
+    gameBoard.nextTurnBtn.disabled = false;
     //if the bidder is the last player in the game, re-enable playerOne buttons
     if (game.currentPlayer == game.players.length-1) {
-        playerOneBidBtn.disabled = false, nextTurn.disabled = false, callLiarBtn.disabled = false
+        gameBoard.playerOneBidBtn.disabled = false, gameBoard.nextTurnBtn.disabled = false, gameBoard.callLiarBtn.disabled = false
     } 
 }
 
@@ -389,7 +396,7 @@ Player.prototype.botBidPlace = function() {
 
         //if the bidder is the last player in the game, re-enable playerOne buttons
         if (game.currentPlayer == game.players.length-1) {
-            playerOneBidBtn.disabled = false, nextTurn.disabled = false, callLiarBtn.disabled = false
+            gameBoard.playerOneBidBtn.disabled = false, gameBoard.nextTurnBtn.disabled = false, gameBoard.callLiarBtn.disabled = false
         } 
     }
 }
@@ -409,7 +416,7 @@ Player.prototype.movesListAppend = function() {
     } else {
         li.setAttribute('class', 'botBidLi')
     }
-    movesList.appendChild(li)
+    gameBoard.movesList.appendChild(li)
 
     li.scrollIntoView({behavior: "smooth"})
     li.classList.add('li', 'movesListAppend')
@@ -467,8 +474,8 @@ const game = {
             }
             //re-enable bid & callLiar buttons for player one if it's their turn
             if (currentPlayer == 0 || currentPlayer == game.players.length-1) {
-                playerOneBidBtn.disabled = false
-                callLiarBtn.disabled = false
+                gameBoard.playerOneBidBtn.disabled = false
+                gameBoard.callLiarBtn.disabled = false
             } 
         }
     },
@@ -477,7 +484,7 @@ const game = {
         let li = document.createElement('li')
         li.innerHTML = `${game.players[0].name} wins!`
         li.setAttribute('class', 'winner')
-        movesList.appendChild(li)
+        gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
         li.classList.add('li', 'movesListAppend')
     }
@@ -506,7 +513,7 @@ const dice = {
     },
     rollAllDice() {
 
-        rollBtn.disabled = true
+        gameBoard.rollBtn.disabled = true
 
         this.rollDiceMessage()
 
@@ -540,8 +547,8 @@ const dice = {
             setTimeout(game.players[game.lastRoundWinner].botBid(), 1000)
         } else {
             game.currentPlayer = 0
-            playerOneBidBtn.disabled = false
-            nextTurn.disabled = false
+            gameBoard.playerOneBidBtn.disabled = false
+            gameBoard.nextTurnBtn.disabled = false
         }
     },
 
@@ -549,7 +556,7 @@ const dice = {
         let li = document.createElement('li')
         li.setAttribute('class', 'rollDiceMessage')
         li.innerHTML = 'All dice have been rolled; a new round begins.'
-        movesList.appendChild(li)
+        gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
     },
 
@@ -559,7 +566,7 @@ const dice = {
         if (liarStatus == true) {
             let li = document.createElement('li')
             li.setAttribute('class', 'liarEvent')
-            movesList.appendChild(li)
+            gameBoard.movesList.appendChild(li)
 
             if (lastBidder.numDice >= 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
@@ -580,7 +587,7 @@ const dice = {
             let li = document.createElement('li')
             li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice`
             li.setAttribute('class', 'liarEvent')
-            movesList.appendChild(li)
+            gameBoard.movesList.appendChild(li)
 
             li.scrollIntoView({behavior: "smooth"})
             li.classList.add('li', 'movesListAppend')
@@ -617,11 +624,11 @@ function setPlayerTwoName() {
 /*----------------------------------------
 add event listeners to roll and bid buttons
 ----------------------------------------*/
-rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
-playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
-nextTurn.addEventListener('click', game.nextTurn)
-callLiarBtn.addEventListener('click', liar.callLiar.bind(liar))
-showDice.addEventListener('click', liar.liarShowDice.bind(liar))
+gameBoard.rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
+gameBoard.playerOneBidBtn.addEventListener('click', playerOne.bid.bind(playerOne))
+gameBoard.nextTurnBtn.addEventListener('click', game.nextTurn)
+gameBoard.callLiarBtn.addEventListener('click', liar.callLiar.bind(liar))
+gameBoard.showDiceBtn.addEventListener('click', liar.liarShowDice.bind(liar))
 
 /*----------------------------------------
 add event listeners for non-game-related things
