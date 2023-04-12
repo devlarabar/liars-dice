@@ -183,6 +183,7 @@ const liar = {
     
         gameBoard.showDiceBtn.disabled = true
         gameBoard.rollBtn.disabled = false
+        game.nextTurnBtn.disabled = true
     },
 
     liarDiceDisplay() {
