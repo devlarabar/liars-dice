@@ -224,8 +224,78 @@ Player.prototype.bid = function() {
 
 /*----------------------------------------
 bot bid
-----------------------------------------*/
+----------------------------------------*/ //if last bid is falsy, bot needs to make his own new bid
 Player.prototype.botBid = function() { 
+
+    if (game.lastBid[0] == undefined) {
+        this.botBidNewRound()
+    } else {
+        this.botBidPlace()
+    }
+}
+
+Player.prototype.botBidNewRound = function() {
+    let rngBidFace = Math.ceil(Math.random()*100) //rng to see how much they'll bit for face
+    let rngBidAmt = Math.ceil(Math.random()*100) //rng to see how much they'll bid for amt
+
+    let bidFace
+    let bidAmt
+
+    let numDice = game.numDice
+
+    switch(true) {
+        case rngBidFace > 97:
+            bidFace = 6
+            break
+        case rngBidFace > 90:
+            bidFace = 5
+            break
+        case rngBidFace > 80:
+            bidFace = 4
+            break
+        case rngBidFace > 70:
+            bidFace = 3
+            break
+        case rngBidFace > 45:
+            bidFace = 2
+            break
+        default:
+            bidFace = 1
+    }
+    switch(true) {
+        case rngBidAmt > 97:
+            bidAmt = Math.ceil(numDice*0.33)
+            break
+        case rngBidAmt > 90:
+            bidAmt = Math.ceil(numDice*0.15)
+            break
+        case rngBidAmt > 80:
+            bidAmt = Math.ceil(numDice*0.1)
+            break
+        case rngBidAmt > 60:
+            bidAmt = 2
+            break
+        default:
+            bidAmt = 1
+    }
+
+    let botBid = [Number(bidFace), Number(bidAmt), game.players.indexOf(this)]
+    game.lastBid = botBid
+
+    //insert into DOM
+    this.movesListAppend()
+
+    //run liar function
+    liar.liar()
+
+    nextTurn.disabled = false;
+    //if the bidder is the last player in the game, re-enable playerOne buttons
+    if (game.currentPlayer == game.players.length-1) {
+        playerOneBidBtn.disabled = false, nextTurn.disabled = false, callLiarBtn.disabled = false
+    } 
+}
+
+Player.prototype.botBidPlace = function() {
 
     if (Number(game.lastBid[0]) == 6 && Number(game.lastBid[1]) == game.numDice) {
         console.log('No more bids can be placed. Call the last bidder a liar, or re-roll all dice.')
@@ -316,6 +386,11 @@ Player.prototype.botBid = function() {
 
         //run liar function
         liar.liar()
+
+        //if the bidder is the last player in the game, re-enable playerOne buttons
+        if (game.currentPlayer == game.players.length-1) {
+            playerOneBidBtn.disabled = false, nextTurn.disabled = false, callLiarBtn.disabled = false
+        } 
     }
 }
 
@@ -381,7 +456,7 @@ const game = {
             console.error('You must place a bid before proceeding to the next turn.')
         }
         else {
-            let currentPlayer //the person who will bid next
+            let currentPlayer //the person who will bid next 
             if (game.lastBid[2] == game.players.length-1) {
                 currentPlayer = 0
                 console.log('It is your turn to bid.')
@@ -435,9 +510,6 @@ const dice = {
 
         this.rollDiceMessage()
 
-        //it gave me a bug without this (said not my turn), will fix this later
-        game.currentPlayer = 0
-
         game.lastBid = []
         game.currentDice = []
         document.querySelector('.p1DiceDisplay').innerHTML = '' //clear playerOne dice display
@@ -460,14 +532,17 @@ const dice = {
         })
         console.log(game.currentDice)//verify functionality
         console.log(game.countDice())//check how many of each dice are currently in the game
-        
 
-        // if (!game.lastBid || game.lastRoundWinner == 0) {
+        console.log(game.lastBid)
+        
+        //if the last round winner was not playerOne, start the botBids; if playerOne, let them bid
+        if (game.lastRoundWinner != 0) {
+            setTimeout(game.players[game.lastRoundWinner].botBid(), 1000)
+        } else {
+            game.currentPlayer = 0
             playerOneBidBtn.disabled = false
             nextTurn.disabled = false
-        // } else {
-        //     game.nextTurn()
-        // }
+        }
     },
 
     rollDiceMessage() {
@@ -559,6 +634,6 @@ function changeMode() {
 
 /* to do:
 - functionality to choose how many players (2-5)
-- winner of last round goes first after roll
 - if game.players.length == 2 && game.currentDice.length == 2, change the game to be the sum of both faces. keep bidding until one calls liar. if the last bid was <= sum, they win.
+- a separate function in game object to see which buttons should be disabled or not
 */
