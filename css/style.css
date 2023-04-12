@@ -162,7 +162,7 @@ game log
 /* ********************
 player boards
 ******************** */
-#playerOneBoard {
+#player1Board {
     grid-area: p1;
     background: var(--p1board-bg);
     padding: 15px;
@@ -180,11 +180,11 @@ player boards
     grid-area: dice;
     height: 75px;
 }
-#playerOneBoard .diceRemaining {
+#player1Board .diceRemaining {
     grid-area: diceRemaining;
     text-align: left;
 }
-#playerOneBoard .lastBid {
+#player1Board .lastBid {
     grid-area: lastBid;
     text-align: right;
 }
@@ -212,16 +212,16 @@ player boards
 .diceRemaining {
     text-align: right;
 }
-#playerTwoBoard {
+#player2Board {
     grid-area: p2;
 }
-#playerThreeBoard {
+#player3Board {
     grid-area: p3;
 }
-#playerFourBoard {
+#player4Board {
     grid-area: p4;
 }
-#playerFiveBoard {
+#player5Board {
     grid-area: p5;
 }
 .bidDie {

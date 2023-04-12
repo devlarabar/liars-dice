@@ -23,6 +23,7 @@ class Player {
         this.playerID = playerNum
         this.playerType = botOrHuman
         this.hasDice = true
+        this.playerBoard = `#player${playerNum}Board`
     }
     
     bidStatus() {
@@ -338,24 +339,10 @@ Player.prototype.movesListAppend = function() {
     li.scrollIntoView({behavior: "smooth"})
     li.classList.add('li', 'movesListAppend')
 
-    let lastBidDisplay
-        switch(this.playerID) {
-            case '1':
-                lastBidDisplay = document.querySelector('#playerOneBoard .lastBid span')
-                break
-            case '2':
-                lastBidDisplay = document.querySelector('#playerTwoBoard .lastBid span')
-                break
-            case '3':
-                lastBidDisplay = document.querySelector('#playerThreeBoard .lastBid span')
-                break
-            case '4':
-                lastBidDisplay = document.querySelector('#playerFourBoard .lastBid span')
-                break
-            case '5':
-                lastBidDisplay = document.querySelector('#playerFiveBoard .lastBid span')
-        }
+    //update lastBid display on playerBoards
+    let lastBidDisplay = document.querySelector(`${this.playerBoard} .lastBid span`)
     lastBidDisplay.innerHTML = `${game.lastBid[1]} ${faceImg}`
+    
 }
 
 /*----------------------------------------
@@ -525,7 +512,6 @@ const dice = {
         }
         
         //decide which dice count goes down
-        let diceRemainingDisplay
         let whoLosesDice
         switch(true) {
             case liarStatus:
@@ -534,24 +520,8 @@ const dice = {
             case !liarStatus:
                 whoLosesDice = game.players[game.currentPlayer]
         }
-        
-        switch(whoLosesDice.playerID) {
-            case '1':
-                diceRemainingDisplay = document.querySelector('#playerOneBoard .diceRemaining span')
-                break
-            case '2':
-                diceRemainingDisplay = document.querySelector('#playerTwoBoard .diceRemaining span')
-                break
-            case '3':
-                diceRemainingDisplay = document.querySelector('#playerThreeBoard .diceRemaining span')
-                break
-            case '4':
-                diceRemainingDisplay = document.querySelector('#playerFourBoard .diceRemaining span')
-                break
-            case '5':
-                diceRemainingDisplay = document.querySelector('#playerFiveBoard .diceRemaining span')
-        }
-            diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
+        let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
+        diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
     }
 }
 
