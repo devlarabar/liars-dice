@@ -163,7 +163,6 @@ const liar = {
                 console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice, and are out of the game.`)
             } else if (game.players[game.currentPlayer].numDice == 0 && game.currentPlayer == 0){
                 console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice. Game over!`)
-                game.gameOver()
             } else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice.`)
             }
@@ -192,8 +191,10 @@ const liar = {
         }
     
         gameBoard.showDiceBtn.disabled = true
-        gameBoard.rollBtn.disabled = false
         gameBoard.nextTurnBtn.disabled = true
+        if (game.players[0].numDice != 0) {
+            gameBoard.rollBtn.disabled = false
+        }
     },
 
     liarDiceDisplay() {
@@ -259,13 +260,13 @@ Player.prototype.bid = function() {
         //insert into DOM
         this.movesListAppend()
 
-        //run liar function
-        liar.liar()
-
         //disable bid button for playerOne after their turn
         gameBoard.playerOneBidBtn.disabled = true
         gameBoard.callLiarBtn.disabled = true
         gameBoard.nextTurnBtn.disabled = false
+
+        //run liar function
+        liar.liar()
     }
     li.setAttribute('class', 'bidError')
     gameBoard.movesList.appendChild(li)
@@ -536,6 +537,13 @@ const game = {
         gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
         li.classList.add('li', 'movesListAppend')
+
+        let li2 = document.createElement('li')
+        li2.innerHTML = `Click <a href="#" id="newGame">here</a> to start a new game.`
+        li2.setAttribute('class', 'startNewGame')
+        gameBoard.movesList.appendChild(li2)
+        li2.scrollIntoView({behavior: "smooth"})
+        li2.classList.add('li', 'movesListAppend')
     },
 
     choosePlayers() {
@@ -568,6 +576,13 @@ const game = {
         gameBoard.callLiarBtn.disabled = true
         gameBoard.nextTurnBtn.disabled = true
         gameBoard.showDiceBtn.disabled = true
+        
+        let li = document.createElement('li')
+        li.innerHTML = `Click <a href="#" id="newGame">here</a> to start a new game.`
+        li.setAttribute('class', 'startNewGame')
+        gameBoard.movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
     }
 }
 game.numDice = game.players.length*5
@@ -649,19 +664,14 @@ const dice = {
             li.setAttribute('class', 'liarEvent')
             gameBoard.movesList.appendChild(li)
 
-            if (lastBidder.numDice >= 1) {
+            if (game.players[game.currentPlayer].numDice < 1 && game.currentPlayer == 0 || game.players[game.lastBid[2]].numDice < 1 && game.players[game.lastBid[2]].playerID == 1) {
+                console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`)
+                li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`
+                
+            } else if (lastBidder.numDice >= 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
                 li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`
             } 
-            else if (lastBidder.numDice < 1 && lastBidder.playerID == 1) {
-                console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`)
-                li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`
-                rollBtn.disabled = true
-                playerOneBidBtn.disabled = true
-                callLiarBtn.disabled = true
-                nextTurnBtn.disabled = true
-                showDiceBtn.disabled = true
-            }
             else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
                 li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`
@@ -672,29 +682,43 @@ const dice = {
 
             li.scrollIntoView({behavior: "smooth"})
             li.classList.add('li', 'movesListAppend')
+
+            if (game.players[game.currentPlayer].numDice < 1 && game.currentPlayer == 0 || game.players[game.lastBid[2]].numDice < 1 && game.players[game.lastBid[2]].playerID == 1) {
+                game.gameOver()
+            }
         } 
         
         else {
+            //decide which dice count goes down
+            let whoLosesDice
+            switch(true) {
+                case liarStatus:
+                    whoLosesDice = lastBidder
+                    break
+                case !liarStatus:
+                    whoLosesDice = game.players[game.currentPlayer]
+            }
+            let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
+            diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
+
+            //insert into DOM
             let li = document.createElement('li')
-            li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice`
-            li.setAttribute('class', 'liarEvent')
-            gameBoard.movesList.appendChild(li)
+            if (game.players[game.currentPlayer].numDice < 1 && game.currentPlayer == 0) {
+                li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice, and are out of the game. Game over!`
+                li.setAttribute('class', 'liarEvent')
+                gameBoard.movesList.appendChild(li)
+                game.gameOver()
+            }
+            else {
+                li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice`
+                li.setAttribute('class', 'liarEvent')
+                gameBoard.movesList.appendChild(li)
+            }
+            
 
             li.scrollIntoView({behavior: "smooth"})
             li.classList.add('li', 'movesListAppend')
         }
-        
-        //decide which dice count goes down
-        let whoLosesDice
-        switch(true) {
-            case liarStatus:
-                whoLosesDice = lastBidder
-                break
-            case !liarStatus:
-                whoLosesDice = game.players[game.currentPlayer]
-        }
-        let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
-        diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
     }
 }
 

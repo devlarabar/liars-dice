@@ -190,6 +190,10 @@ game log
     background: none;
     color: red;
 }
+.startNewGame {
+    background: var(--color-button);
+    color: var(--font-color-light);
+}
 /* ********************
 player boards
 ******************** */
