@@ -222,10 +222,12 @@ Player.prototype.bid = function() {
     } else if (bid[0] > 6 || bid[0] < 1) {
         console.error(`'Face' bid must be between 1 and 6. 'Face' bid was ${bid[0]}.`)
     } else if (bid[1] <= game.lastBid[1] && bid[0] <= game.lastBid[0]) {
-        console.error(`Either 'Amount' or 'Face' bid must be greater than the last bid. Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
-    } else if (bid[0] < game.lastBid[0] || bid[1] < game.lastBid[1]) {
-        console.error(`Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
-    } else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
+        console.error(`Either 'Amount' or 'Face' bid must be greater than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
+    } 
+    // else if (bid[0] < game.lastBid[0] || bid[1] < game.lastBid[1]) {
+    //     console.error(`Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
+    // }
+     else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
         console.error(`It is ${game.players[game.currentPlayer].name}'s turn to play.`)
     }
     //update lastBid
