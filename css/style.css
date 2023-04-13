@@ -186,6 +186,10 @@ game log
     background: green;
     color: #fff;
 }
+.bidError {
+    background: none;
+    color: red;
+}
 /* ********************
 player boards
 ******************** */

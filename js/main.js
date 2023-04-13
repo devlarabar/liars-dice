@@ -125,6 +125,8 @@ const liar = {
         gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
         li.classList.add('li', 'movesListAppend')
+        
+        gameBoard.nextTurnBtn.disabled = true
     },
 
     liarEvent() {
@@ -140,6 +142,7 @@ const liar = {
     liarShowDice() {
 
         this.liarDiceDisplay()
+        
 
         let lastBidder = game.players[game.lastBid[2]]
         let playerBeingAccused = game.players[game.players.indexOf(lastBidder)]
@@ -156,7 +159,14 @@ const liar = {
         if (lastBidder.bidStatus()) {
             game.lastRoundWinner = game.lastBid[2]
             game.players[game.currentPlayer].numDice--
-            console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice.`)
+            if (game.players[game.currentPlayer].numDice == 0 && game.currentPlayer != 0) {
+                console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice, and are out of the game.`)
+            } else if (game.players[game.currentPlayer].numDice == 0 && game.currentPlayer == 0){
+                console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice. Game over!`)
+                game.gameOver()
+            } else {
+                console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice.`)
+            }
             
             dice.diceCountDisplay(false)
             
@@ -183,7 +193,7 @@ const liar = {
     
         gameBoard.showDiceBtn.disabled = true
         gameBoard.rollBtn.disabled = false
-        game.nextTurnBtn.disabled = true
+        gameBoard.nextTurnBtn.disabled = true
     },
 
     liarDiceDisplay() {
@@ -212,23 +222,26 @@ Player.prototype.bid = function() {
     
     const bid = [Number(document.querySelector(`#p${this.playerID}BidFace`).value), Number(document.querySelector(`#p${this.playerID}BidAmount`).value), game.players.indexOf(this)]
 
-    //input validation
+    //input validation & inserting any errors into movesList/DOM
+    let li = document.createElement('li')
     if (game.currentDice[0] == undefined) {
         console.error('Please roll the dice before placing a bid.')
+        li.innerHTML = 'Please roll the dice before placing a bid.'
     } else if (bid[0] == '' || bid[1] == '') {
         console.error('Please verify that all bid entries are filled.')
+        li.innerHTML = 'Please verify that all bid entries are filled.'
     } else if (bid[1] > game.players.length*5 || bid[1] < 0) {
         console.error(`'Amount' bid must be between 0 and the total number of dice in the game (${game.numDice}). 'Amount' bid was ${bid[1]}.`)
+        li.innerHTML = `'Amount' bid must be between 0 and the total number of dice in the game (${game.numDice}). 'Amount' bid was ${bid[1]}.`
     } else if (bid[0] > 6 || bid[0] < 1) {
         console.error(`'Face' bid must be between 1 and 6. 'Face' bid was ${bid[0]}.`)
+        li.innerHTML = `'Face' bid must be between 1 and 6. 'Face' bid was ${bid[0]}.`
     } else if (bid[1] <= game.lastBid[1] && bid[0] <= game.lastBid[0]) {
         console.error(`Either 'Amount' or 'Face' bid must be greater than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
-    } 
-    // else if (bid[0] < game.lastBid[0] || bid[1] < game.lastBid[1]) {
-    //     console.error(`Neither can be lower than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
-    // }
-     else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
+        li.innerHTML = `Either 'Amount' or 'Face' bid must be greater than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`
+    } else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
         console.error(`It is ${game.players[game.currentPlayer].name}'s turn to play.`)
+        li.innerHTML = `It is ${game.players[game.currentPlayer].name}'s turn to play.`
     }
     //update lastBid
     else {
@@ -254,6 +267,10 @@ Player.prototype.bid = function() {
         gameBoard.callLiarBtn.disabled = true
         gameBoard.nextTurnBtn.disabled = false
     }
+    li.setAttribute('class', 'bidError')
+    gameBoard.movesList.appendChild(li)
+    li.scrollIntoView({behavior: "smooth"})
+    li.classList.add('li', 'movesListAppend')
 }
 
 /*----------------------------------------
@@ -543,6 +560,14 @@ const game = {
                 gameBoard.choosePlayersPopup.classList.add('hidden')
             })
         })
+    },
+
+    gameOver() {
+        gameBoard.rollBtn.disabled = true
+        gameBoard.playerOneBidBtn.disabled = true
+        gameBoard.callLiarBtn.disabled = true
+        gameBoard.nextTurnBtn.disabled = true
+        gameBoard.showDiceBtn.disabled = true
     }
 }
 game.numDice = game.players.length*5
@@ -627,7 +652,17 @@ const dice = {
             if (lastBidder.numDice >= 1) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`)
                 li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice.`
-            } else {
+            } 
+            else if (lastBidder.numDice < 1 && lastBidder.playerID == 1) {
+                console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`)
+                li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game. Game over!`
+                rollBtn.disabled = true
+                playerOneBidBtn.disabled = true
+                callLiarBtn.disabled = true
+                nextTurnBtn.disabled = true
+                showDiceBtn.disabled = true
+            }
+            else {
                 console.log(`--liarEvent()-- ${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`)
                 li.innerHTML = `${lastBidder.name} was a liar! They lose a die; they now have ${lastBidder.numDice} dice, and are out of the game.`
                 lastBidder.hasDice = false
