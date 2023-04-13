@@ -16,8 +16,9 @@ The game continues in this fashion until only one player has dice remaining.
 
 When the game reaches two players with only one die each, they bid instead on the sum of both faces.
 
-### :memo: Progress
-- need to add an end-game event
+### :memo: Progress & to-do
+- add an end-game event
+- change the game when there are 2 players with 1 die each remaining
 - would like to improve the layout
 - need to make the layout responsive to all screen sizes
 
