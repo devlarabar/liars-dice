@@ -17,12 +17,11 @@ The game continues in this fashion until only one player has dice remaining.
 When the game reaches two players with only one die each, they bid instead on the sum of both faces.
 
 ### :memo: Progress & to-do
-- add an end-game event
+- add an end-game event (to start new game)
 - change the game when there are 2 players with 1 die each remaining
 - implement the 'exact' rule ()
 - would like to improve the layout
 - need to make the layout responsive to all screen sizes
-- fix bug: game over event when player one runs out of dice not working properly
 
 ### :computer: Try a demo!
 Please enjoy a live demo of the project <a href="https://devlarabar.github.io/liars-dice/">here</a>!
