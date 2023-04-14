@@ -104,6 +104,8 @@ const liar = {
                     gameBoard.movesList.appendChild(li)
                     li.scrollIntoView({behavior: "smooth"})
                     li.classList.add('li', 'movesListAppend')
+                    
+                    gameBoard.nextTurnBtn.disabled = true
             }
         }
     },
@@ -181,7 +183,6 @@ const liar = {
             //if playerOne is out of dice
             if (playerBeingAccused.playerID == 1 && playerBeingAccused.hasDice == false) {
                 console.log('Game over!')
-                // game.loseEvent()
             }
             //if playerOne wins
             if (game.players[0].playerID == 1 && game.players.length == 1) {
@@ -683,24 +684,12 @@ const dice = {
             li.scrollIntoView({behavior: "smooth"})
             li.classList.add('li', 'movesListAppend')
 
-            if (game.players[game.currentPlayer].numDice < 1 && game.currentPlayer == 0 || game.players[game.lastBid[2]].numDice < 1 && game.players[game.lastBid[2]].playerID == 1) {
+            if (playerOne.numDice < 1) {
                 game.gameOver()
             }
         } 
         
         else {
-            //decide which dice count goes down
-            let whoLosesDice
-            switch(true) {
-                case liarStatus:
-                    whoLosesDice = lastBidder
-                    break
-                case !liarStatus:
-                    whoLosesDice = game.players[game.currentPlayer]
-            }
-            let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
-            diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
-
             //insert into DOM
             let li = document.createElement('li')
             if (game.players[game.currentPlayer].numDice < 1 && game.currentPlayer == 0) {
@@ -714,11 +703,22 @@ const dice = {
                 li.setAttribute('class', 'liarEvent')
                 gameBoard.movesList.appendChild(li)
             }
-            
 
             li.scrollIntoView({behavior: "smooth"})
             li.classList.add('li', 'movesListAppend')
         }
+        
+        //decide which dice count goes down
+        let whoLosesDice
+        switch(true) {
+            case liarStatus:
+                whoLosesDice = lastBidder
+                break
+            case !liarStatus:
+                whoLosesDice = game.players[game.currentPlayer]
+        }
+        let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
+        diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
     }
 }
 
