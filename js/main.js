@@ -126,6 +126,7 @@ const liar = {
                     || bidDifference == 3 && rng >= 65 
                     || bidDifference > 3 && rng >= 50
                     || bidDifference >= 5 && rng >= 10
+                    || game.lastBid[1] == game.numDice() && game.lastBid[0] == 6
                     ) {
                         this.liarRngResult()
                 }
@@ -206,7 +207,6 @@ const liar = {
 
             if (game.players[game.currentPlayer].numDice == 0 && game.currentPlayer != 0) {
                 console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice, and are out of the game.`)
-                // game.players.splice(game.currentPlayer, 1)
             } else if (game.players[game.currentPlayer].numDice == 0 && game.currentPlayer == 0){
                 console.log(`--liarEvent()-- ${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice. Game over!`)
             } else {
@@ -533,6 +533,10 @@ Player.prototype.botBidPlace = function() {
 
         game.lastBid = botBid
 
+        if (botBid[0] == 6 && botBid[1] == game.numDice()) {
+            console.log('No more bids can be placed after this one. Next player must call the last bidder a liar, or re-roll all dice.')
+        }
+
         game.currentPlayer = botBid[2]
 
         //insert into DOM
@@ -544,7 +548,7 @@ Player.prototype.botBidPlace = function() {
         //if the bidder is the last player in the game, re-enable playerOne buttons
         if (game.currentPlayer == game.players.length-1) {
             gameBoard.playerOneBidBtn.disabled = false, gameBoard.nextTurnBtn.disabled = false, gameBoard.callLiarBtn.disabled = false
-        } 
+        }
     }
 }
 
@@ -687,8 +691,22 @@ const game = {
                 gameBoard.playerOneBidBtn.disabled = false
                 gameBoard.callLiarBtn.disabled = false
                 gameBoard.nextTurnBtn.disabled = true
+                if (game.lastBid[1] == game.numDice() && game.lastBid[0] == 6) {
+                    gameBoard.rollBtn.disabled = false
+                    console.log('No more valid bids can be placed. Call the last bidder a liar, or roll all dice.')
+                    game.maxBidEvent()
+                }
             } 
         }
+    },
+
+    maxBidEvent() {
+        let li = document.createElement('li')
+        li.innerHTML = 'No more valid bids can be placed. Call the last bidder a liar, or roll all dice.'
+        // li.setAttribute('class', 'bidError')
+        gameBoard.movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
     },
 
     winnerEvent() {
@@ -889,13 +907,14 @@ const dice = {
                 gameBoard.movesList.appendChild(li)
                 game.gameOver()
             }
-            else if (game.players.length == 2 && game.players[0] == playerOne && game.players[1].numDice == 0 && playerOne.numDice != 0) {
-                game.winnerEvent()
-            }
             else if (game.players[game.currentPlayer].numDice < 1) {
                 li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice, and are out of the game.`
+                game.players.splice(game.currentPlayer, 1)
                 li.setAttribute('class', 'liarEvent')
                 gameBoard.movesList.appendChild(li)
+            }
+            else if (game.players.length == 1 && game.players[0] == playerOne) {
+                game.winnerEvent()
             }
             else {
                 li.innerHTML = `${lastBidder.name} was not a liar. They keep their dice, and ${game.players[game.currentPlayer].name} loses a die; they now have ${game.players[game.currentPlayer].numDice} dice`
@@ -916,8 +935,11 @@ const dice = {
             case !liarStatus:
                 whoLosesDice = game.players[game.currentPlayer]
         }
-        let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
-        diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
+
+        if (whoLosesDice) {
+            let diceRemainingDisplay = document.querySelector(`${whoLosesDice.playerBoard} .diceRemaining span`)
+            diceRemainingDisplay.innerHTML = `${whoLosesDice.numDice}`
+        } 
 
         if (game.players.length == 1) {
             console.log(`${playerOne.name} wins!`)
