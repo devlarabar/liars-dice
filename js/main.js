@@ -993,6 +993,5 @@ game.choosePlayers()
 gameBoard.playerOneBidBtn.disabled = true
 
 /* to do:
-- if game.players.length == 2 && game.currentDice.length == 2, change the game to be the sum of both faces. keep bidding until one calls liar. if the last bid was <= sum, they win.
-- a separate function in game object to see which buttons should be disabled or not
+- if you do the max bid and click next turn, (on final two this happened), they should immediately call liar; you shouldnt be able to roll
 */
