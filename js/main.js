@@ -811,7 +811,6 @@ const game = {
         gameBoard.choosePlayersPopup.classList.remove('hidden')
         game.choosePlayers()
 
-        localStorage.clear()
         game.newGameStarted = true
         game.players.forEach(x => {
             x.numDice = 5
@@ -1036,13 +1035,44 @@ gameBoard.showDiceBtn.addEventListener('click', liar.liarShowDice.bind(liar))
 gameBoard.newGameBtn.addEventListener('click', game.newGame.bind(game))
 
 /*----------------------------------------
-add event listeners for non-game-related things
+layout
 ----------------------------------------*/
 //dark mode toggle
 darkMode.addEventListener('click', changeMode)
 function changeMode() {
     document.body.classList.toggle('darkMode')
+    document.querySelector('#darkMode i').classList.toggle('fa-moon')
+    document.querySelector('#darkMode i').classList.toggle('fa-sun')
+
+    //remember choice
+    if (document.body.classList.contains('darkMode')) {
+        localStorage.setItem('theme', 'dark')
+    } else {
+        localStorage.setItem('theme', 'light')
+    }
 }
+
+if (localStorage.getItem('theme') == 'dark') {
+    document.body.classList.add('darkMode')
+    document.querySelector('#darkMode i').classList.remove('fa-moon')
+    document.querySelector('#darkMode i').classList.add('fa-sun')
+} else {
+    document.body.classList.remove('darkMode')
+    document.querySelector('#darkMode i').classList.add('fa-moon')
+    document.querySelector('#darkMode i').classList.remove('fa-sun')
+}
+
+//layout responsiveness for mobile from: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+let vh = window.innerHeight * 0.01;
+// Then we set the value in the --vh custom property to the root of the document
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+// We listen to the resize event
+window.addEventListener('resize', () => {
+    // We execute the same script as before
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  });
 
 /*----------------------------------------
 on page load, choose players
