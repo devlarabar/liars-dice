@@ -1017,16 +1017,16 @@ const dice = {
 /*----------------------------------------
 set player names
 ----------------------------------------*/
-document.querySelector('#submitPlayerOneName').addEventListener('click', setPlayerOneName)
-function setPlayerOneName() {
-    playerOne.name = document.querySelector('#playerOneName').value
-    console.log(`Player One's name has been set to: "${playerOne.name}"`)
-}
-document.querySelector('#submitPlayerTwoName').addEventListener('click', setPlayerTwoName)
-function setPlayerTwoName() {
-    playerTwo.name = document.querySelector('#playerTwoName').value
-    console.log(`Player Two's name has been set to: "${playerTwo.name}"`)
-}
+// document.querySelector('#submitPlayerOneName').addEventListener('click', setPlayerOneName)
+// function setPlayerOneName() {
+//     playerOne.name = document.querySelector('#playerOneName').value
+//     console.log(`Player One's name has been set to: "${playerOne.name}"`)
+// }
+// document.querySelector('#submitPlayerTwoName').addEventListener('click', setPlayerTwoName)
+// function setPlayerTwoName() {
+//     playerTwo.name = document.querySelector('#playerTwoName').value
+//     console.log(`Player Two's name has been set to: "${playerTwo.name}"`)
+// }
 
 /*----------------------------------------
 add event listeners to roll and bid buttons
