@@ -144,7 +144,7 @@ game log
     padding: 20px;
     min-height: 250px;
     overflow: auto;
-    flex: 2;
+    flex: 10;
     background: var(--movesList-bg);
 }
 .movesListIntro {
@@ -278,7 +278,7 @@ player boards
     flex-basis: 100%;
     justify-content: space-between;
     justify-items: stretch;
-    padding: 3px 15px;
+    padding: 6px 15px;
     align-items: center;
     flex: 1;
 }
@@ -289,6 +289,10 @@ player boards
     text-align: center;
     font-size: 1.8rem;
     flex: 1;
+}
+#player2Board, #player3Board, #player4Board, #player5Board {
+    
+    max-height: 80px;
 }
 #player2Board {
     grid-area: p2;
@@ -463,5 +467,15 @@ media queries
     }
     h1, header {
         font-size: 2rem;
+    }
+    .pBot {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .pBot h2 {
+        font-size: 1.5rem;
+    }
+    .pBot .diceRemaining {
+        font-size: 1.5rem;
     }
 }
