@@ -20,6 +20,7 @@ html / body styles
     --botBid-bg: #ddd;
     --liar-event-bg: #cacaca;
     --playerChooseButtons-bg: #EFEFEF;
+    --playerChooseButtons-border: #b5bac9;
     --p1border: #ededed;
     --font-color: #1E1E1E;
     --font-botBid: #1E1E1E;
@@ -48,6 +49,7 @@ html {
     --header-bg: #101010;
     --accent-bg: #252525;
     --playerChooseButtons-bg: #5F5A6B;
+    --playerChooseButtons-border: #000;
 }
 body {
     background-color: var(--body-bg);
@@ -105,7 +107,7 @@ header a {
     color: #fff;
 }
 header a:hover {
-    color: var(--color-button);
+    color: var(--accent-color2);
 }
 
 /* ********************
@@ -386,8 +388,11 @@ choose players popup
     font-weight: bold;
     padding: 20px;
     background: var(--playerChooseButtons-bg);
-    border: 2px solid var(--header-bg);
-    border-radius: 5px;
+    border: 2px solid var(--playerChooseButtons-border);
+    border-radius: 2px;
+}
+.playerOptionsContainer button:hover {
+    opacity: 0.5;
 }
 
 /* ********************
@@ -435,9 +440,6 @@ media queries
         width: 50px;
         height: 50px;
     }
-    /* .movesListContainer {
-        height: 240px;
-    } */
 }
 @media all and (max-width: 330px) {
     #player1Board {
@@ -458,9 +460,6 @@ media queries
     .p1DiceDisplay img {
         width: 40px;
         height: 40px;
-    }
-    /* .movesListContainer {
-        height: 220px; */
     }
     h1, header {
         font-size: 2rem;

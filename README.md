@@ -1,6 +1,6 @@
 # :game_die: Liar's Dice
 
-<img src="assets/liars-dice-preview.png">
+<img src="assets/liars-dice-preview2.png">
 
 Liar's Dice is a classic dice game with at least two players. Each player is given five dice, which they must keep hidden from other players. 
 
