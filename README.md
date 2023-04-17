@@ -18,6 +18,7 @@ When the game reaches two players with only one die each, they bid instead on th
 
 ### :memo: Progress & to-do
 - would like to improve the layout
+- add inputs to change player names
 
 ### :computer: Try a demo!
 Please enjoy a live demo of the project <a href="https://devlarabar.github.io/liars-dice/">here</a>!

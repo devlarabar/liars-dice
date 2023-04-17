@@ -4,6 +4,9 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Play Liar's Dice">
+        <meta name="keywords" content="JavaScript, Dice, Game">
+        <meta name="author" content="Lara Alexander">
         <title>Liar's Dice</title>
         <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2102/2102161.png">
         <!-- external stylesheets & fonts -->
@@ -26,36 +29,20 @@
             </div>
         </div>
 
-        <section class="hidden">
-        <!-- <nav>
-            <button id="darkMode">Light/Dark</button>
-        </nav> -->
-
-        <label for="playerOneName">Player 1 Name</label>
-        <input type="text" id="playerOneName" placeholder="Enter your name">
-        <button id="submitPlayerOneName">Set Name</button>
-
-        <label for="playerTwoName">Player 2 Name</label>
-        <input type="text" id="playerTwoName" placeholder="Enter your name">
-        <button id="submitPlayerTwoName">Set Name</button>
-        </section>
-
-        
-
         <main>
 
                 <header class="flex">
-                    <h1><i class="fa-solid fa-cube"></i> Liar's Dice</h1>
+                    <h1><i class="fa-solid fa-cube" role="presentation"></i> Liar's Dice</h1>
                     <span>
-                        <a href="#" id="newGameBtn"><i class="fa-solid fa-arrow-rotate-right"></i>
-                            <a href="#" id="darkMode"><i class="fa-solid fa-moon"></i></a>
-                        <a href="https://github.com/devlarabar/liars-dice"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" id="newGameBtn" aria-label="New game"><i class="fa-solid fa-arrow-rotate-right"></i>
+                            <a href="#" id="darkMode" aria-label="Dark mode toggle"><i class="fa-solid fa-moon"></i></a>
+                        <a href="https://github.com/devlarabar/liars-dice" aria-label="GitHub repository"><i class="fa-brands fa-github"></i></a>
                     </span>
                 </header>
                 <section id="player1Board">
                     <ul class="p1DiceDisplay flex">
                     </ul>
-                    <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                    <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice" role="presentation"></i>
                     </div>
                     <div class="lastBid">
                         <h6>Last Bid</h6>
@@ -86,7 +73,7 @@
                 <section class="playerBots flex">
                     <section id="player2Board" class="pBot flex">
                         <h2>Player Two</h2>
-                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice" role="presentation"></i>
                         </div>
                         <div class="lastBid">
                             <h6>Last Bid</h6>
@@ -95,7 +82,7 @@
                     </section>
                     <section id="player3Board" class="pBot flex">
                         <h2>Player Three</h2>
-                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice" role="presentation"></i>
                         </div>
                         <div class="lastBid">
                             <h6>Last Bid</h6>
@@ -104,7 +91,7 @@
                     </section>
                     <section id="player4Board" class="pBot flex">
                         <h2>Player Four</h2>
-                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice" role="presentation"></i>
                         </div>
                         <div class="lastBid">
                             <h6>Last Bid</h6>
@@ -113,7 +100,7 @@
                     </section>
                     <section id="player5Board" class="pBot flex">
                         <h2>Player Five</h2>
-                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice"></i>
+                        <div class="diceRemaining"><span>5</span> <i class="fa-solid fa-dice" role="presentation"></i>
                         </div>
                         <div class="lastBid">
                             <h6>Last Bid</h6>

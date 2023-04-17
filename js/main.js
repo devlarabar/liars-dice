@@ -286,21 +286,27 @@ Player.prototype.bid = function() {
     if (game.currentDice[0] == undefined) {
         console.error('Please roll the dice before placing a bid.')
         li.innerHTML = 'Please roll the dice before placing a bid.'
+        insertError()
     } else if (bid[0] == '' || bid[1] == '') {
         console.error('Please verify that all bid entries are filled.')
         li.innerHTML = 'Please verify that all bid entries are filled.'
+        insertError()
     } else if (bid[1] > game.numDice() || bid[1] < 0) {
         console.error(`'Amount' bid must be between 0 and the total number of dice in the game (${game.numDice()}). 'Amount' bid was ${bid[1]}.`)
         li.innerHTML = `'Amount' bid must be between 0 and the total number of dice in the game (${game.numDice()}). 'Amount' bid was ${bid[1]}.`
+        insertError()
     } else if (bid[0] > 6 || bid[0] < 1) {
         console.error(`'Face' bid must be between 1 and 6. 'Face' bid was ${bid[0]}.`)
         li.innerHTML = `'Face' bid must be between 1 and 6. 'Face' bid was ${bid[0]}.`
+        insertError()
     } else if (bid[1] <= game.lastBid[1] && bid[0] <= game.lastBid[0]) {
         console.error(`Either 'Amount' or 'Face' bid must be greater than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`)
         li.innerHTML = `Either 'Amount' or 'Face' bid must be greater than the last bid. The bid placed was ${bid[1]} of face ${bid[0]}. The last valid bid was ${game.lastBid[1]} of face ${game.lastBid[0]}`
+        insertError()
     } else if (game.currentPlayer != 0 && game.currentPlayer != '' && game.currentPlayer != game.players.length-1) {
         console.error(`It is ${game.players[game.currentPlayer].name}'s turn to play.`)
         li.innerHTML = `It is ${game.players[game.currentPlayer].name}'s turn to play.`
+        insertError()
     }
     //update lastBid
     else {
@@ -326,10 +332,12 @@ Player.prototype.bid = function() {
         //run liar function
         liar.liar()
     }
-    li.setAttribute('class', 'bidError')
-    gameBoard.movesList.appendChild(li)
-    li.scrollIntoView({behavior: "smooth"})
-    li.classList.add('li', 'movesListAppend')
+    function insertError() {
+        li.setAttribute('class', 'bidError')
+        gameBoard.movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
+    }
 }
 
 /*----------------------------------------

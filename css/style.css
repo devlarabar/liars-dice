@@ -17,14 +17,18 @@ html / body styles
     --header-bg: #D64F0A;
     --accent-color: #519e8a;
     --accent-color2: #f26419;
+    --diceDisplay-color: #519e8a;
     --botBid-bg: #ddd;
     --liar-event-bg: #cacaca;
     --playerChooseButtons-bg: #EFEFEF;
     --playerChooseButtons-border: #b5bac9;
+    --bidError-color: red;
+    --bidError-bg: none;
     --p1border: #ededed;
     --font-color: #1E1E1E;
     --font-botBid: #1E1E1E;
     --font-color-light: #fff;
+    --font-color-button: #fff;
     --font-family-main: "Roboto", "Helvetica", sans-serif;
     --font-family-playerNames: "Helvetica", sans-serif;
     --font-family-button: "Roboto", sans-serif;
@@ -50,6 +54,12 @@ html {
     --accent-bg: #252525;
     --playerChooseButtons-bg: #5F5A6B;
     --playerChooseButtons-border: #000;
+    --diceDisplay-color: #eee;
+    --bidError-bg: #E9E8E9;
+    --bidError-color: #D10000;
+    --accent-color: #62b29d;
+    --color-button: #474350;
+    --font-color-button: #000;
 }
 body {
     background-color: var(--body-bg);
@@ -216,8 +226,8 @@ game log
     color: #fff;
 }
 .bidError {
-    background: none;
-    color: red;
+    background: var(--bidError-bg);
+    color: var(--bidError-color);
 }
 .startNewGame {
     background: var(--color-button);
@@ -311,7 +321,7 @@ player boards
     height: 20px;
 }
 .fa-dice {
-    color: var(--accent-color);
+    color: var(--diceDisplay-color);
 }
 /* ********************
 buttons and inputs
@@ -348,7 +358,8 @@ input[type="number"] {
     font-family: var(--font-family-button);
 }
 .buttons button:enabled {
-    transform: scale(1.06)
+    transform: scale(1.06);
+    color: var(--font-color-button)
 }
 .buttons button:disabled {
     background: var(--color-button);
