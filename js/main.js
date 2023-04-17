@@ -10,9 +10,11 @@ const gameBoard = {
     movesList: document.querySelector('#movesList'),
     choosePlayersBtns: Array.from(document.querySelectorAll('.choosePlayersBtn')),
     choosePlayersPopup: document.querySelector('.choosePlayersPopup'),
+
+    newGameBtn: document.querySelector('#newGameBtn'),
     
     regularGameInputs: Array.from(document.querySelectorAll('.regularGame')),
-    finalTwoGameInputs: document.querySelector('.finalTwoGame'),
+    finalTwoGameInputs: Array.from(document.querySelectorAll('.finalTwoGame')),
 
     buttonStatus() {
         //code here
@@ -21,16 +23,28 @@ const gameBoard = {
     visiblePlayerBoards() {
         switch(game.players.length) {
             case 2:
+                document.querySelector(playerTwo.playerBoard).classList.remove('hidden')
                 document.querySelector(playerThree.playerBoard).classList.add('hidden')
                 document.querySelector(playerFour.playerBoard).classList.add('hidden')
                 document.querySelector(playerFive.playerBoard).classList.add('hidden')
                 break
             case 3:
+                document.querySelector(playerTwo.playerBoard).classList.remove('hidden')
+                document.querySelector(playerThree.playerBoard).classList.remove('hidden')
                 document.querySelector(playerFour.playerBoard).classList.add('hidden')
                 document.querySelector(playerFive.playerBoard).classList.add('hidden')
                 break
             case 4:
+                document.querySelector(playerTwo.playerBoard).classList.remove('hidden')
+                document.querySelector(playerThree.playerBoard).classList.remove('hidden')
+                document.querySelector(playerFour.playerBoard).classList.remove('hidden')
                 document.querySelector(playerFive.playerBoard).classList.add('hidden')
+                break
+            case 5:
+                document.querySelector(playerTwo.playerBoard).classList.remove('hidden')
+                document.querySelector(playerThree.playerBoard).classList.remove('hidden')
+                document.querySelector(playerFour.playerBoard).classList.remove('hidden')
+                document.querySelector(playerFive.playerBoard).classList.remove('hidden')
         }
     }
 }
@@ -229,14 +243,14 @@ const liar = {
                 console.log('Game over!')
             }
             //if playerOne wins
-            if (game.players[0].playerID == 1 && game.players.length == 1) {
-                console.log(`${game.players[0].name} wins!`)
-            }
+            // if (game.players[0].playerID == 1 && game.players.length == 1) {
+            //     console.log(`${game.players[0].name} wins!`)
+            // }
         }
     
         gameBoard.showDiceBtn.disabled = true
         gameBoard.nextTurnBtn.disabled = true
-        if (game.players[0].numDice != 0) {
+        if (game.players[0].numDice != 0 && game.players.length > 1) {
             gameBoard.rollBtn.disabled = false
         }
     },
@@ -654,6 +668,7 @@ const game = {
     lastLiarCaller: '',
     currentPlayer: '',
     lastRoundWinner: 0,
+    newGameStarted: false,
 
     listNumPlayers() {
         console.log(this.players.length)
@@ -710,6 +725,8 @@ const game = {
     },
 
     winnerEvent() {
+        gameBoard.rollBtn.disabled = true
+
         let li = document.createElement('li')
         li.innerHTML = `${game.players[0].name} wins!`
         li.setAttribute('class', 'winner')
@@ -718,7 +735,7 @@ const game = {
         li.classList.add('li', 'movesListAppend')
 
         let li2 = document.createElement('li')
-        li2.innerHTML = `Click <a href="#" id="newGame">here</a> to start a new game.`
+        li2.innerHTML = `Start a new game.`
         li2.setAttribute('class', 'startNewGame')
         gameBoard.movesList.appendChild(li2)
         li2.scrollIntoView({behavior: "smooth"})
@@ -726,7 +743,6 @@ const game = {
     },
 
     choosePlayers() {
-        console.log(gameBoard.choosePlayersBtns)
         gameBoard.choosePlayersBtns.forEach(x => {
             x.addEventListener('click', () => {
                 switch(true) {
@@ -757,7 +773,7 @@ const game = {
         gameBoard.showDiceBtn.disabled = true
         
         let li = document.createElement('li')
-        li.innerHTML = `Click <a href="#" id="newGame">here</a> to start a new game.`
+        li.innerHTML = `Start a new game.`
         li.setAttribute('class', 'startNewGame')
         gameBoard.movesList.appendChild(li)
         li.scrollIntoView({behavior: "smooth"})
@@ -787,7 +803,44 @@ const game = {
 
     finalTwoBidInputs() {
         gameBoard.regularGameInputs.forEach(x => x.classList.add('hidden'))
-        gameBoard.finalTwoGameInputs.classList.remove('hidden')
+        gameBoard.finalTwoGameInputs.forEach(x => x.classList.remove('hidden'))
+    },
+
+    newGame() {
+        game.players = [playerOne, playerTwo, playerThree, playerFour, playerFive]
+        gameBoard.choosePlayersPopup.classList.remove('hidden')
+        game.choosePlayers()
+
+        localStorage.clear()
+        game.newGameStarted = true
+        game.players.forEach(x => {
+            x.numDice = 5
+            let lastBidDisplay = document.querySelector(`${x.playerBoard} .lastBid span`)
+            lastBidDisplay.innerHTML = ''
+            let diceRemainingDisplay = document.querySelector(`${x.playerBoard} .diceRemaining span`)
+            diceRemainingDisplay.innerHTML = '5'
+        })
+        game.currentPlayer = 0
+        document.querySelector('.p1DiceDisplay').innerHTML = ''
+        game.lastBid = []
+        game.currentDice = []
+
+        gameBoard.regularGameInputs.forEach(x => x.classList.remove('hidden'))
+        gameBoard.finalTwoGameInputs.forEach(x => x.classList.add('hidden'))
+
+        gameBoard.playerOneBidBtn.disabled = true
+        gameBoard.nextTurnBtn.disabled = true
+        gameBoard.callLiarBtn.disabled = true
+        gameBoard.showDiceBtn.disabled = true
+        gameBoard.rollBtn.disabled = false
+
+        gameBoard.movesList.innerHTML = ''
+
+        let li = document.createElement('li')
+        li.innerHTML = `New game started.`
+        gameBoard.movesList.appendChild(li)
+        li.scrollIntoView({behavior: "smooth"})
+        li.classList.add('li', 'movesListAppend')
     }
 }
 
@@ -842,8 +895,13 @@ const dice = {
 
         console.log(game.lastBid)
         
-        //if the last round winner was not playerOne, start the botBids; if playerOne, let them bid
-        if (game.lastRoundWinner != 0) {
+        //if the last round winner was not playerOne, start the botBids; if playerOne, let them bid; if new game just started, p1 turn
+        if (game.newGameStarted) {
+            game.currentPlayer = 0
+            gameBoard.playerOneBidBtn.disabled = false
+            gameBoard.nextTurnBtn.disabled = true
+            game.newGameStarted = false
+        } else if (game.lastRoundWinner != 0) {
             setTimeout(game.players[game.lastRoundWinner].botBid(), 1000)
         } else {
             game.currentPlayer = 0
@@ -969,12 +1027,13 @@ add event listeners to roll and bid buttons
 
 gameBoard.rollBtn.addEventListener('click', dice.rollAllDice.bind(dice))
 
-    gameBoard.playerOneBidBtn.addEventListener('click', game.checkFinalTwoBidStatus.bind(game))
-
+gameBoard.playerOneBidBtn.addEventListener('click', game.checkFinalTwoBidStatus.bind(game))
 gameBoard.nextTurnBtn.addEventListener('click', game.nextTurn)
 
 gameBoard.callLiarBtn.addEventListener('click', liar.callLiar.bind(liar))
 gameBoard.showDiceBtn.addEventListener('click', liar.liarShowDice.bind(liar))
+
+gameBoard.newGameBtn.addEventListener('click', game.newGame.bind(game))
 
 /*----------------------------------------
 add event listeners for non-game-related things

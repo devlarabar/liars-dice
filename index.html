@@ -43,7 +43,11 @@
         <main>
 
                 <header class="flex">
-                    <h1><i class="fa-solid fa-cube"></i> Liar's Dice</h1><span><a href="https://github.com/devlarabar/liars-dice"><i class="fa-brands fa-github"></i></a></span>
+                    <h1><i class="fa-solid fa-cube"></i> Liar's Dice</h1>
+                    <span>
+                        <a href="#" id="newGameBtn"><i class="fa-solid fa-arrow-rotate-right"></i>
+                        <a href="https://github.com/devlarabar/liars-dice"><i class="fa-brands fa-github"></i></a>
+                    </span>
                 </header>
                 <section id="player1Board">
                     <ul class="p1DiceDisplay flex">
@@ -64,9 +68,9 @@
 
                 <section class="p1PlayerOptions">
                     <form class="flex">
-                        <label for="p1BidAmount">Amount</label><input type="number" id="p1BidAmount" min="1" class="regularGame">
-                        <label for="p1BidFace">Face</label><input type="number" id="p1BidFace" min="1" max="6" class="regularGame">
-                        <label for="p1BidSum">Sum</label><input type="number" id="p1BidSum" min="1" max="12" class="finalTwoGame hidden">
+                        <label for="p1BidAmount" class="regularGame">Amount</label><input type="number" id="p1BidAmount" min="1" class="regularGame">
+                        <label for="p1BidFace" class="regularGame">Face</label><input type="number" id="p1BidFace" min="1" max="6" class="regularGame">
+                        <label for="p1BidSum" class="finalTwoGame hidden">Sum</label><input type="number" id="p1BidSum" min="1" max="12" class="finalTwoGame hidden">
                     </form>
                     <section class="buttons flex">
                         <button id="rollDice">Roll</button>                

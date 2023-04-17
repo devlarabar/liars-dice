@@ -357,6 +357,9 @@ misc styles
 .movesListAppend {
     animation: movesListAppend .2s linear;
 }
+a:link, a:visited, a:active {
+    text-decoration: none;
+}
 
 /* ********************
 animation
