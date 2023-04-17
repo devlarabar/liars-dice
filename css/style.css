@@ -37,6 +37,10 @@ body {
     font-family: var(--font-family-main);
     font-size: 1.5rem;
     line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
 }
 main {
     width: 100%;
@@ -324,6 +328,7 @@ choose players popup
     left: 0;
     justify-content: center;
     align-content: center;
+    border-radius: 0;
 }
 .choosePlayersPopup h2 {
     text-align: center;
@@ -344,9 +349,6 @@ choose players popup
     font-weight: bold;
     padding: 20px;
 }
-/* ********************
-media queries 
-******************** */
 
 /* ********************
 misc styles
@@ -375,4 +377,56 @@ animation
     }
 }
 
-
+/* ********************
+media queries 
+******************** */
+@media all and (max-width: 500px) {
+    main {
+        margin-top: 0;
+        margin-bottom: 0;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    header {
+        border-radius: 0;
+    }
+    .p1DiceDisplay {
+        gap: 15px;
+    }
+    .p1DiceDisplay img {
+        width: 50px;
+        height: 50px;
+    }
+    .movesListContainer {
+        height: 240px;
+    }
+}
+@media all and (max-width: 330px) {
+    #player1Board {
+        height: 105px;
+    }
+    .p1DiceDisplay img {
+        width: 45px;
+        height: 45px;
+    }
+    input[type="number"] {
+        width: 60px;
+    }
+}
+@media all and (max-width: 300px) {
+    .p1DiceDisplay {
+        gap: 8px;
+    }
+    .p1DiceDisplay img {
+        width: 40px;
+        height: 40px;
+    }
+    .movesListContainer {
+        height: 220px;
+    }
+    h1, header {
+        font-size: 2rem;
+    }
+}
