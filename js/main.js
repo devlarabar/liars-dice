@@ -134,12 +134,12 @@ const liar = {
             } 
             else {
                 if (
-                    lastBidder.bidStatus() && rng <= 5 
+                    lastBidder.bidStatus() && rng <= 8 
                     || bidDifference == 1 && rng >= 85 
-                    || bidDifference == 2 && rng >= 75 
-                    || bidDifference == 3 && rng >= 65 
-                    || bidDifference > 3 && rng >= 50
-                    || bidDifference >= 5 && rng >= 10
+                    || bidDifference == 2 && rng >= 73 
+                    || bidDifference == 3 && rng >= 47 
+                    || bidDifference > 3 && rng >= 30
+                    || bidDifference >= 5 && rng >= 5
                     || game.lastBid[1] == game.numDice() && game.lastBid[0] == 6
                     ) {
                         this.liarRngResult()
