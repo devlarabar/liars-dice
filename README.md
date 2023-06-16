@@ -16,9 +16,8 @@ The game continues in this fashion until only one player has dice remaining.
 
 When the game reaches two players with only one die each, they bid instead on the sum of both faces.
 
-### :memo: Progress & to-do
-- would like to improve the layout
-- add inputs to change player names
+### :memo: Improvements
+This app was created for fun and practice! The code can be improved to make it more DRY; much of the logic (particularly, the logic disabling/enabling the various buttons) can be refactored into loops. Another major improvement were I to re-create this app would be to implement a GameState class to track the current state of the game and update the game board accordingly.
 
 ### :computer: Try a demo!
 Please enjoy a live demo of the project <a href="https://devlarabar.github.io/liars-dice/">here</a>!
